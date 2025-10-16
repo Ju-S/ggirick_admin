@@ -23,15 +23,22 @@ public class JWTUtil {
         this.jwt = JWT.require(algorithm).build();
     }
 
+    // String ID 버전
     public String createToken(String id) {
         return JWT.create()
-                // .withSubject(id)
-                // .withClaim("name", "Tom")
+                .withSubject(id) // JWT의 subject에 id 저장
+                .withClaim("id", id)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + exp))
                 .sign(algorithm);
     }
 
+    // int ID 버전 (오버로딩)
+    public String createToken(int id) {
+        return createToken(String.valueOf(id)); // int → String 변환 후 재활용
+    }
+
+    // 토큰 검증 및 복호화
     public DecodedJWT verifyToken(String token) {
         return jwt.verify(token);
     }
