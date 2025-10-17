@@ -1,6 +1,6 @@
-package com.kedu.ggirick_admin_backend.controllers;
+package com.kedu.ggirick_admin_backend.controllers.hr;
 
-import com.kedu.ggirick_admin_backend.dto.EmployeeDTO;
+import com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO;
 import com.kedu.ggirick_admin_backend.services.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/employee")
@@ -19,10 +21,13 @@ public class EmployeeController {
 
     // 직원 등록
     @PostMapping
-    public ResponseEntity<Void> insertEmployee(@RequestBody EmployeeDTO dto) {
-        EmployeeDTO inserted = employeeService.insertEmployee(dto);
-        return (inserted != null)
-                ? ResponseEntity.ok().build()
+    public ResponseEntity<Map<String, String>> insertEmployee(@RequestBody EmployeeDTO dto) {
+        String tempPw = employeeService.insertEmployee(dto);
+        // 담아서 보낼 준비
+        Map<String, String> map = new HashMap<>();
+        map.put("tempPw", tempPw);
+        return (tempPw != null)
+                ? ResponseEntity.ok(map)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
@@ -45,7 +50,7 @@ public class EmployeeController {
     // 로그인한 사용자 정보 조회
     @GetMapping("/me")
     public ResponseEntity<EmployeeDTO> getMyInfo(HttpServletRequest request) {
-        String id = (String) request.getAttribute("loginID");
+        String id = (String) request.getAttribute("loginId");
         if (id == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

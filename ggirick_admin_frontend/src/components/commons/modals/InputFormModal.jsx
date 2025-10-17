@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 /**
- * 📦 공용 폼 모달 컴포넌트 (form 태그 제거 버전)
+ * 공용 모달 컴포넌트
  */
 export default function InputFormModal({isOpen, onClose, onSubmit, title, fields = []}) {
     const [formData, setFormData] = useState({});
@@ -12,7 +12,7 @@ export default function InputFormModal({isOpen, onClose, onSubmit, title, fields
     const [errorMsg, setErrorMsg] = useState("");
     const inputRefs = useRef({});
 
-    // ✅ 오늘 날짜 (전역 사용)
+    // 오늘 날짜 (전역 사용)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -24,7 +24,7 @@ export default function InputFormModal({isOpen, onClose, onSubmit, title, fields
         }
     };
 
-    /** ✅ 유효성 검사 */
+    // 유효성 검사
     const handleConfirm = () => {
         const nameRegex = /^(?:[가-힣]{2,8}|[a-zA-Z]{2,10})$/;
         const salaryRegex = /^\d{1,3}(,\d{3})*$|^\d{4,8}$/;
@@ -32,7 +32,7 @@ export default function InputFormModal({isOpen, onClose, onSubmit, title, fields
         for (const field of fields) {
             const value = formData[field.name];
 
-            // ✅ 필수 입력 확인
+            // 필수 입력 확인
             if (field.required && (!value || value === "")) {
                 setErrorField(field.name);
                 setErrorMsg(`${field.label}을(를) 입력해주세요.`);
@@ -40,7 +40,7 @@ export default function InputFormModal({isOpen, onClose, onSubmit, title, fields
                 return;
             }
 
-            // ✅ 이름 정규식 검사
+            // 이름 정규식 검사
             if (field.name === "name" && !nameRegex.test(value)) {
                 setErrorField(field.name);
                 setErrorMsg("이름은 한글 2~8자 또는 영어 2~10자만 가능합니다.");
@@ -48,7 +48,7 @@ export default function InputFormModal({isOpen, onClose, onSubmit, title, fields
                 return;
             }
 
-            // ✅ 연봉 정규식 검사
+            // 연봉 정규식 검사
             if (field.name === "salary" && !salaryRegex.test(value)) {
                 setErrorField(field.name);
                 setErrorMsg("연봉은 숫자 4~8자리 또는 천단위 콤마 형식으로 입력해주세요. (예: 2,500)");
@@ -56,7 +56,7 @@ export default function InputFormModal({isOpen, onClose, onSubmit, title, fields
                 return;
             }
 
-            // ✅ 날짜 검사 — 오늘 이전 날짜 불가
+            // 날짜 검사 — 오늘 이전 날짜 불가
             if (field.name === "hireDate") {
                 const dateValue = new Date(value);
                 if (isNaN(dateValue.getTime())) {
@@ -76,11 +76,11 @@ export default function InputFormModal({isOpen, onClose, onSubmit, title, fields
             }
         }
 
-        // ✅ 모든 통과 시
+        // 모든 통과 시
         setErrorField(null);
         setErrorMsg("");
 
-        // ✅ 등록 후 입력폼 초기화 함수
+        // 등록 후 입력폼 초기화 함수
         const resetForm = () => {
             setFormData({});
             Object.keys(inputRefs.current).forEach((key) => {

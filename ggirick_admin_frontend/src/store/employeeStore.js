@@ -13,6 +13,7 @@ const useEmployeeStore = create((set) => ({
         email: "",
         profile_url: "",
         employment_status: "", // ACTIVE / LEAVE / RESIGNED / RETIRED / SUSPENDED
+        employee_authority: ""
     },
 
     // 선택한 사원의 재직 이력 리스트

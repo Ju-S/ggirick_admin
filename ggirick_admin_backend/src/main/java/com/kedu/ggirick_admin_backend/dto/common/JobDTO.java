@@ -1,4 +1,4 @@
-package com.kedu.ggirick_admin_backend.dto;
+package com.kedu.ggirick_admin_backend.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrganizationDTO {
+public class JobDTO {
     private String code;
     private String name;
+    private int rankOrder;
 }

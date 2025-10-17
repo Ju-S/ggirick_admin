@@ -66,7 +66,7 @@ export default function HRDashboard() {
             ],
         },
         {
-            name: "position",
+            name: "job",
             label: "직급",
             type: "select",
             required: true,
@@ -76,6 +76,16 @@ export default function HRDashboard() {
                 { value: "dir", label: "부장" },
                 { value: "mgr", label: "과장" },
                 { value: "stf", label: "사원" },
+            ],
+        },
+        {
+            name: "organization",
+            label: "조직",
+            type: "select",
+            required: true,
+            options: [
+                { value: "org001", label: "조직1" },
+                { value: "org002", label: "조직2" }
             ],
         },
         { name: "hireDate", label: "입사일", type: "date", required: true },

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.kedu.ggirick_admin_backend.dto.auth.UserTokenDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,22 +24,15 @@ public class JWTUtil {
         this.jwt = JWT.require(algorithm).build();
     }
 
-    // String ID 버전
-    public String createToken(String id) {
+    public String createToken(UserTokenDTO userInfo) {
         return JWT.create()
-                .withSubject(id) // JWT의 subject에 id 저장
-                .withClaim("id", id)
+                 .withSubject(userInfo.getId())
+                 .withClaim("authority", userInfo.getAuthority())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + exp))
                 .sign(algorithm);
     }
 
-    // int ID 버전 (오버로딩)
-    public String createToken(int id) {
-        return createToken(String.valueOf(id)); // int → String 변환 후 재활용
-    }
-
-    // 토큰 검증 및 복호화
     public DecodedJWT verifyToken(String token) {
         return jwt.verify(token);
     }

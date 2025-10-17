@@ -1,4 +1,4 @@
-package com.kedu.ggirick_admin_backend.dto;
+package com.kedu.ggirick_admin_backend.dto.employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +13,8 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class EmploymentStatus {
     private int seq;
-    private String emp_id;
-    private String employment_status;
-    private Timestamp change_date;
-    private Timestamp reg_date;
+    private String empId;
+    private String employmentStatus;
+    private Timestamp changeDate;
+    private Timestamp regDate;
 }

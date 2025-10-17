@@ -1,13 +1,8 @@
-package com.kedu.ggirick_admin_backend.controllers;
+package com.kedu.ggirick_admin_backend.controllers.hr;
 
-import com.kedu.ggirick_admin_backend.dto.EmployeeDTO;
-import com.kedu.ggirick_admin_backend.dto.OrganizationDTO;
 import com.kedu.ggirick_admin_backend.services.OrganizationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/organization")

@@ -5,21 +5,43 @@ import ggirickLogo from "../../assets/logo/ggirick-header.png";
 
 import {loginAPI} from "../../api/auth/authAPI.js";
 import LoginInputForm from "../../components/auth/LoginInputForm.jsx";
+import useAuthStore from "../../store/authStore.js";
+import {getMyInfoAPI} from "../../api/hr/index.js";
+import {useNavigate} from "react-router-dom";
 
 
 export function LoginPage() {
+    // input 입력 값 저장할 상태변수
     const [loginInfo, setLoginInfo] = useState({
         id: "",
         pw: "",
     });
 
+    // 네비게이터
+    const navigate = useNavigate();
+
+    // 전역 상태변수 불러오기
     const setEmployee = useEmployeeStore((state) => state.setEmployee);
+    const login = useAuthStore(state => state.login);
+
 
     const handleLogin = () => {
         loginAPI(loginInfo)
             .then((resp) => {
-                if (resp.data != null) {
-                    setEmployee(resp.data);
+                const token = resp.data;
+                if (token != null) {
+                    // 로그인 저장
+                    login(token);
+                    // 로그인한 직원 정보 가져오기
+                    getMyInfoAPI(token).then(resp => {
+                        const myInfo = resp.data;
+                        if(myInfo != null) {
+                            setEmployee(myInfo);
+                            navigate("/");
+                        }else {
+                            alert("정보를 불러오는데 실패했습니다.");
+                        }
+                    });
                 } else {
                     alert("회원정보가 일치하지 않습니다.");
                 }
