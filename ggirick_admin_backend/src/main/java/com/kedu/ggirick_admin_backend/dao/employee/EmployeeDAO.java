@@ -15,22 +15,49 @@ public class EmployeeDAO {
 
     // ID만 가져오기
     public EmployeeDTO getById(EmployeeDTO dto) {
-        return mybatis.selectOne("Employee.getById", dto);
+        return mybatis.selectOne("hr.employee.getById", dto);
     }
 
+    // ----------- 직원 등록시 연계 추가 작업들
     // 직원 등록
     public int insertEmployee(EmployeeDTO dto) {
-       return mybatis.insert("Employee.insertEmployee", dto);
+        return mybatis.insert("hr.employee.insertEmployee", dto);
     }
 
+    // 권한 부여 ( 직원 신규 등록시 )
+    public int insertEmployeeAuthority(EmployeeDTO dto) {
+        return mybatis.insert("hr.employee.insertEmployeeAuthority", dto);
+    }
+
+    // 부서 등록 ( 직원 신규 등록시 )
+    public int insertEmployeeDepartment(EmployeeDTO dto) {
+        return mybatis.insert("hr.employee.insertEmployeeDepartment", dto);
+    }
+
+    // 직급 등록 ( 직원 신규 등록시 )
+    public int insertEmployeeJob(EmployeeDTO dto) {
+        return mybatis.insert("hr.employee.insertEmployeeJob", dto);
+    }
+
+    // 조직 등록 ( 직원 신규 등록시 )
+    public int insertEmployeeOrganization(EmployeeDTO dto) {
+        return mybatis.insert("hr.employee.insertEmployeeOrganization", dto);
+    }
+
+    // 재직 상태 등록 ( 직원 신규 등록시 )
+    public int insertEmploymentStatus(String empId) {
+        return mybatis.insert("hr.employee.insertEmploymentStatus", empId);
+    }
+
+    // ------------------------------------------
     // 직원 삭제
     public void deleteEmployeeById(String id) {
-        mybatis.delete("Employee.deleteById", id);
+        mybatis.delete("hr.employee.deleteById", id);
     }
 
     // 직원 수정
     public EmployeeDTO updateEmployeeById(EmployeeDTO dto) {
-        int result = mybatis.update("Employee.updateById", dto);
+        int result = mybatis.update("hr.employee.updateById", dto);
         if(result != 0) {
             return getEmployeeInfo(dto.getId());
         }
@@ -39,27 +66,27 @@ public class EmployeeDAO {
 
     // 직원 정보 가져오기
     public EmployeeDTO getEmployeeInfo(String id) {
-        return mybatis.selectOne("Employee.getEmployeeInfo", id);
+        return mybatis.selectOne("hr.employee.getEmployeeInfo", id);
     }
 
     // 직원 전체 목록 가져오기
     public List<EmployeeDTO> getAllEmployeeList() {
-        return mybatis.selectList("Employee.getAllEmployeeList");
+        return mybatis.selectList("hr.employee.getAllEmployeeList");
     }
 
     // 초기 비밀번호 변경 여부 테이블에 등록
     public int insertPasswordReset(String empId) {
-        return mybatis.insert("Employee.insertPasswordReset", empId);
+        return mybatis.insert("hr.employee.insertPasswordReset", empId);
     }
 
     // 비밀번호 변경
     public boolean updatePassword(EmployeeDTO dto) {
-        return mybatis.update("Employee.updatePassword", dto) != 0;
+        return mybatis.update("hr.employee.updatePassword", dto) != 0;
     }
 
     // 올해 마지막 사번 조회
     public String getLastEmployeeId(String yearSuffix) {
-        return mybatis.selectOne("Employee.getLastEmployeeId", yearSuffix);
+        return mybatis.selectOne("hr.employee.getLastEmployeeId", yearSuffix);
     }
 
 }

@@ -12,12 +12,12 @@ import java.util.Date;
 
 @Component
 public class JWTUtil {
-
     @Value("${jwt.expiration}")
     private Long exp;
 
     private final Algorithm algorithm;
     private final JWTVerifier jwt;
+
 
     public JWTUtil(@Value("${jwt.secret}") String secret) {
         this.algorithm = Algorithm.HMAC256(secret);
@@ -26,10 +26,10 @@ public class JWTUtil {
 
     public String createToken(UserTokenDTO userInfo) {
         return JWT.create()
-                 .withSubject(userInfo.getId())
-                 .withClaim("authority", userInfo.getAuthority())
+                .withSubject(userInfo.getId())
+                .withClaim("authority", userInfo.getAuthority())
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + exp))
+                .withExpiresAt(new Date(System.currentTimeMillis() + exp * 1000))
                 .sign(algorithm);
     }
 

@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = "http://10.5.5.8:8082";
+// const BASE_URL = "http://10.5.5.8:8082";
+const BASE_URL = "http://192.168.219.110:8082";
+
 
 const api = axios.create();
 
@@ -11,8 +13,9 @@ api.interceptors.request.use(
         const token = sessionStorage.getItem("token");
         // 헤더 붙이기
         config.headers = {
-                Authorization: `Bearer ${token}` // JWT 강 컨베션
-            }
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        };
         return config;
     },
     (error) => {

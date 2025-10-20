@@ -1,7 +1,6 @@
 import api from "../commons/apiInterceptor.js";
 import apiRoutes from "../commons/apiRoutes.js";
 
-
 export function loginAPI(loginInfo) {
     return api({...apiRoutes.auth.login, data: loginInfo});
 }

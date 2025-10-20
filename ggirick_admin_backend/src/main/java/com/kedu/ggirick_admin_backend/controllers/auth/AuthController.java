@@ -2,8 +2,8 @@ package com.kedu.ggirick_admin_backend.controllers.auth;
 
 import com.kedu.ggirick_admin_backend.dto.auth.UserTokenDTO;
 import com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO;
-import com.kedu.ggirick_admin_backend.services.AuthService;
-import com.kedu.ggirick_admin_backend.services.EmployeeService;
+import com.kedu.ggirick_admin_backend.services.auth.AuthService;
+import com.kedu.ggirick_admin_backend.services.hr.EmployeeService;
 import com.kedu.ggirick_admin_backend.utils.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -19,7 +19,7 @@ public class EmployeeDTO {
     private String profileUrl;
 
     // 아래 3개는 테이블 FK용 임시 필드 - 등록시에 사용
-    private String deptCode;  // 부서코드
-    private String orgCode;   // 조직코드
+    private String departmentCode;  // 부서코드
+    private String organizationCode;   // 조직코드
     private String jobCode;   // 직급코드
 }

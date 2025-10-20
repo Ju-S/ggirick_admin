@@ -1,6 +1,6 @@
 package com.kedu.ggirick_admin_backend.controllers.hr;
 
-import com.kedu.ggirick_admin_backend.services.OrganizationService;
+import com.kedu.ggirick_admin_backend.services.hr.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

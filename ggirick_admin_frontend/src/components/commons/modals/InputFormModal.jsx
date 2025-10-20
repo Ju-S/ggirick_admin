@@ -1,23 +1,24 @@
-import React, {useRef, useState} from "react";
+import React, { useRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 /**
  * 공용 모달 컴포넌트
  */
-export default function InputFormModal({isOpen, onClose, onSubmit, title, fields = []}) {
-    const [formData, setFormData] = useState({});
-    const [openPicker, setOpenPicker] = useState(null);
-    const [errorField, setErrorField] = useState(null);
-    const [errorMsg, setErrorMsg] = useState("");
+export default function InputFormModal({ isOpen, onClose, onSubmit, title, fields = [] }) {
+    const [formData, setFormData] = useState({}); // input 입력 값 저장용
+    const [errorField, setErrorField] = useState(null); // 에러 필드
+    const [errorMsg, setErrorMsg] = useState(""); // 에러 메시지
     const inputRefs = useRef({});
+    const [confirmModalOpen, setConfirmModalOpen] = useState(false); // 확인 모달
+    const [pendingData, setPendingData] = useState(null); // 대기 데이터
 
     // 오늘 날짜 (전역 사용)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const handleChange = (name, value) => {
-        setFormData((prev) => ({...prev, [name]: value}));
+        setFormData((prev) => ({ ...prev, [name]: value }));
         if (name === errorField) {
             setErrorField(null);
             setErrorMsg("");
@@ -88,9 +89,13 @@ export default function InputFormModal({isOpen, onClose, onSubmit, title, fields
             });
         };
 
-        onSubmit(formData, resetForm); // 👈 resetForm을 같이 넘김
-        onClose();
+        // 확인창 띄우기
+        const handleEmployeeInsert = (data) => {
+            setPendingData(data);
+            setConfirmModalOpen(true);
+        };
 
+        onSubmit(formData, resetForm); // 👈 resetForm을 같이 넘김
     };
 
     if (!isOpen) return null;
@@ -137,45 +142,33 @@ export default function InputFormModal({isOpen, onClose, onSubmit, title, fields
                             );
                         }
 
-                        // ✅ 날짜 선택
+                        // ✅ 날짜 선택 (시간 제거: date만)
                         if (field.type === "date") {
                             return (
                                 <div key={field.name} className="relative">
-                                    <DatePicker
-                                        selected={formData[field.name] ? new Date(formData[field.name]) : null}
-                                        onChange={(date) => {
-                                            handleChange(field.name, date);
-                                            setOpenPicker(null);
-                                        }}
-                                        dateFormat="yyyy-MM-dd"
-                                        placeholderText={field.label}
+                                    <input
+                                        ref={(el) => (inputRefs.current[field.name] = el)}
+                                        type="date"
+                                        value={
+                                            formData[field.name]
+                                                ? new Date(formData[field.name]).toISOString().split("T")[0]
+                                                : ""
+                                        }
+                                        onChange={(e) => handleChange(field.name, e.target.value)}
                                         className={`input input-bordered w-full transition-all ${
                                             isError ? "border-red-500 ring-1 ring-red-300" : ""
                                         }`}
-                                        minDate={today}
-                                        showMonthYearDropdown
-                                        open={openPicker === field.name}
-                                        onClickOutside={() => setOpenPicker(null)}
-                                        onChangeRaw={(e) => handleChange(field.name, e.target.value)}
-                                        popperPlacement="bottom-start"   // 👈 모달 아래로 띄움
-                                        calendarClassName="scale-[0.9] origin-top font-normal"
-                                        popperClassName="z-[9999]"
-                                        popperOptions={{
-                                            modifiers: [
-                                                {
-                                                    name: "offset",
-                                                    options: {offset: [0, 8]}, // 살짝 띄우기
-                                                },
-                                            ],
-                                        }}
+                                        required={field.required}
+                                        min={new Date().toISOString().split("T")[0]} // ✅ 오늘 이전 날짜 선택 불가
+                                        placeholder={field.label}
                                     />
-
 
                                     {/* 📅 아이콘 클릭 시 달력 열기 */}
                                     <svg
-                                        onClick={() =>
-                                            setOpenPicker(openPicker === field.name ? null : field.name)
-                                        }
+                                        onClick={() => {
+                                            inputRefs.current[field.name]?.showPicker?.();
+                                            inputRefs.current[field.name]?.focus();
+                                        }}
                                         xmlns="http://www.w3.org/2000/svg"
                                         className="absolute right-3 top-3 h-5 w-5 text-gray-400 cursor-pointer"
                                         fill="none"

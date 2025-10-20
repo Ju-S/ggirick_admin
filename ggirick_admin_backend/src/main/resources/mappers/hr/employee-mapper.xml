@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="Employee">
+<mapper namespace="hr.employee">
     <!-- 로그인용 id만 가져오는 select -->
     <select id="getById" resultType="com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO">
         SELECT * FROM employee WHERE id = #{id}
@@ -15,7 +15,7 @@
 
     <!-- 직원 목록 가져오기 -->
     <select id="getAllEmployeeList" resultType="com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO">
-        SELECT * FROM employee;
+        SELECT * FROM employee
     </select>
 
     <!-- 올해 마지막 사번 조회 -->
@@ -36,7 +36,7 @@
         #{phone, jdbcType=VARCHAR},
         #{extension, jdbcType=VARCHAR},
         #{email, jdbcType=VARCHAR},
-        #{profile_url, jdbcType=VARCHAR}
+        #{profileUrl, jdbcType=VARCHAR}
         )
     </insert>
     <!-- 직원-부서 등록 -->
@@ -47,8 +47,8 @@
         department_code
         ) VALUES (
         employee_department_seq.NEXTVAL,
-        #{id},
-        #{department_code}
+        #{id, jdbcType=VARCHAR},
+        #{departmentCode, jdbcType=VARCHAR}
         )
     </insert>
 
@@ -61,7 +61,7 @@
         change_date
         ) VALUES (
         employment_status_seq.NEXTVAL,
-        #{id},
+        #{empId, jdbcType=VARCHAR},
         'active',
         SYSDATE
         )
@@ -75,8 +75,8 @@
         job_code
         ) VALUES (
         employee_job_seq.NEXTVAL,
-        #{id},
-        #{job_code}
+        #{id, jdbcType=VARCHAR},
+        #{jobCode, jdbcType=VARCHAR}
         )
     </insert>
 
@@ -88,8 +88,8 @@
         organization_code
         ) VALUES (
         employee_organization_seq.NEXTVAL,
-        #{id},
-        #{organization_code}
+        #{id, jdbcType=VARCHAR},
+        #{organizationCode, jdbcType=VARCHAR}
         )
     </insert>
 
@@ -101,7 +101,7 @@
         authority_id
         ) VALUES (
         employee_authority_seq.NEXTVAL,
-        #{id},
+        #{id, jdbcType=VARCHAR},
         1
         )
     </insert>
@@ -109,7 +109,7 @@
     <!-- 임시(초기)비밀번호 변경 여부 확인용 테이블 등록 -->
     <insert id="insertPasswordReset">
         INSERT INTO password_reset (emp_id)
-        VALUES (#{id})
+        VALUES (#{id, jdbcType=VARCHAR})
     </insert>
 
     <!-- 직원 삭제 -->
@@ -123,7 +123,7 @@
         phone = #{phone},
         extension = #{extension},
         email = #{email, jdbcType=VARCHAR},
-        profile_url = #{profile_url, jdbcType=VARCHAR}
+        profile_url = #{profileUrl, jdbcType=VARCHAR}
         WHERE id = #{id}
     </update>
 

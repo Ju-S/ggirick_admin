@@ -2,16 +2,18 @@ package com.kedu.ggirick_admin_backend.interceptors;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.kedu.ggirick_admin_backend.dto.auth.UserTokenDTO;
-import com.kedu.ggirick_admin_backend.services.AuthService;
+import com.kedu.ggirick_admin_backend.services.auth.AuthService;
 import com.kedu.ggirick_admin_backend.utils.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.Collection;
 import java.util.List;
 
 @Component

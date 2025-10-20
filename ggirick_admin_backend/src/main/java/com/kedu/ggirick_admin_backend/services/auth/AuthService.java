@@ -1,4 +1,4 @@
-package com.kedu.ggirick_admin_backend.services;
+package com.kedu.ggirick_admin_backend.services.auth;
 
 
 import com.kedu.ggirick_admin_backend.dao.auth.AuthDAO;

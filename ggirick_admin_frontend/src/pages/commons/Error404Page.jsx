@@ -19,7 +19,7 @@ export default function Error404Page() {
           </p>
           <button
             type="button"
-            onClick={() => navigate("/ggirick_wireframe")}
+            onClick={() => navigate("/")}
             className="w-40 text-center border border-gray-300 rounded-lg px-4 py-2 text-base font-medium text-gray-900 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700"
           >
             홈페이지로

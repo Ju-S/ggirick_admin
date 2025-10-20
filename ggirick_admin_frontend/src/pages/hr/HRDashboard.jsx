@@ -1,99 +1,96 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DashboardTabs from "../../components/commons/DashboardTabs.jsx";
 import InputFormModal from "../../components/commons/modals/InputFormModal.jsx";
-import {employeeListAPI, insertAPI} from "../../api/hr/index.js";
+import { employeeAllListAPI, insertAPI } from "../../api/hr/index.js";
 import useEmployeeStore from "../../store/employeeStore.js";
+import useCommonStore from "../../store/commonStore.js";
 
 export default function HRDashboard() {
     const [activeTab, setActiveTab] = useState("직원 관리");
+
+    // 모달 상태들
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [successModalOpen, setSuccessModalOpen] = useState(false);
+    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+    const [resultModalOpen, setResultModalOpen] = useState(false);
     const [errorModalOpen, setErrorModalOpen] = useState(false);
 
+    // 모달 데이터 상태
+    const [pendingData, setPendingData] = useState(null);
+    const [resultData, setResultData] = useState(null);
+
+    // 공용 스토어
+    const { departments, jobs, organizations } = useCommonStore();
     const { employeeList, setEmployeeList } = useEmployeeStore();
 
     // ✅ 직원 목록 자동 로드
     useEffect(() => {
-        employeeListAPI()
+        employeeAllListAPI()
             .then((res) => {
                 if (res?.data) setEmployeeList(res.data);
             })
             .catch((err) => console.error("직원 목록 조회 실패:", err));
     }, []);
 
-    // ✅ 직원 추가 처리
-    const handleEmployeeInsert = (data, resetForm) => {
-        insertAPI(data)
-            .then((res) => {
-                if (res.data != null) {
-                    console.log("직원 등록 성공:", res.data);
-                    setSuccessModalOpen(true);
+    // ✅ 직원 추가 - 1단계 (InputFormModal에서 전달)
+    const handleEmployeeInsert = (data) => {
+        // 등록하는 경우만 확인창 띄우기
+        setPendingData(data);
+        setConfirmModalOpen(true);
+    };
 
-                    // 등록된 직원 목록 새로 불러오기
-                    employeeListAPI().then((listRes) => {
-                        if (listRes.data != null) {
-                            setEmployeeList(listRes.data);
-                        }
+    // ✅ 직원 추가 - 2단계 (입력내용 확인 후 실제 등록)
+    const handleConfirmInsert = () => {
+        insertAPI(pendingData)
+            .then((res) => {
+                if (res.data) {
+                    setResultData(res.data); // DTO 저장
+                    setResultModalOpen(true);
+                    // 목록 갱신
+                    employeeAllListAPI().then((listRes) => {
+                        if (listRes.data) setEmployeeList(listRes.data);
                     });
-                    // 입력 폼 초기화
-                    resetForm();
                 } else {
-                    console.warn("등록 실패: 서버 응답 없음");
                     setErrorModalOpen(true);
                 }
             })
-            .catch((err) => {
-                console.error("직원 등록 에러:", err);
-                setErrorModalOpen(true);
-            })
+            .catch(() => setErrorModalOpen(true))
             .finally(() => {
+                setConfirmModalOpen(false);
                 setIsModalOpen(false);
             });
     };
 
-    // 직원 추가 필드
-    const employeeFields = [
+    // ✅ 직원 등록 필드 구성 (공용 메타데이터 기반)
+    const employeeFields = useMemo(() => [
         { name: "name", label: "이름", type: "text", required: true },
         {
-            name: "dept",
+            name: "departmentCode",
             label: "부서",
             type: "select",
             required: true,
-            options: [
-                { value: "dep001", label: "개발팀" },
-                { value: "dep002", label: "인사팀" },
-                { value: "dep003", label: "마케팅팀" },
-            ],
+            options: departments || [],
         },
         {
-            name: "job",
+            name: "jobCode",
             label: "직급",
             type: "select",
             required: true,
-            options: [
-                { value: "ceo", label: "대표" },
-                { value: "vp", label: "부사장" },
-                { value: "dir", label: "부장" },
-                { value: "mgr", label: "과장" },
-                { value: "stf", label: "사원" },
-            ],
+            options: jobs || [],
         },
         {
-            name: "organization",
+            name: "organizationCode",
             label: "조직",
             type: "select",
             required: true,
-            options: [
-                { value: "org001", label: "조직1" },
-                { value: "org002", label: "조직2" }
-            ],
+            options: organizations || [],
         },
         { name: "hireDate", label: "입사일", type: "date", required: true },
         { name: "salary", label: "연봉", type: "text", required: true },
-    ];
+    ], [departments, jobs, organizations]);
 
     return (
         <main className="min-h-screen p-6 pt-20 md:ml-64 bg-base-200 text-base-content">
+            {/* 요약 카드 */}
             <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {[{ title: "전체 직원", value: `${employeeList.length}명`, sub: "활성 직원 수" },
                     { title: "부서 수", value: "3개", sub: "운영 중인 부서" },
@@ -110,9 +107,14 @@ export default function HRDashboard() {
                 ))}
             </div>
 
-            <DashboardTabs tabs={["직원 관리", "부서 관리", "휴가 관리", "급여 관리", "조직 관리", "조직도"]}
-                           activeTab={activeTab} setActiveTab={setActiveTab} />
+            {/* 탭 */}
+            <DashboardTabs
+                tabs={["직원 관리", "부서 관리", "휴가 관리", "급여 관리", "조직 관리", "조직도"]}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+            />
 
+            {/* 직원 관리 탭 */}
             {activeTab === "직원 관리" && (
                 <div className="card bg-base-100 shadow-md">
                     <div className="card-body">
@@ -163,28 +165,102 @@ export default function HRDashboard() {
             <InputFormModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                onSubmit={handleEmployeeInsert}
+                onSubmit={handleEmployeeInsert} // ✅ 직원 추가만 중간 확인창 띄움
                 title="직원 추가"
                 fields={employeeFields}
             />
 
-            {/* 성공 / 실패 모달 */}
-            {successModalOpen && (
+            {confirmModalOpen && (
                 <dialog className="modal modal-open">
-                    <div className="modal-box text-center">
-                        <h3 className="font-bold text-lg text-green-600">직원 등록 완료</h3>
-                        <p className="py-3 text-gray-600">새로운 직원이 성공적으로 등록되었습니다.</p>
-                        <div className="modal-action flex justify-center">
-                            <button className="btn btn-success text-white" onClick={() => setSuccessModalOpen(false)}>
-                                확인
-                            </button>
+                    <div className="modal-box bg-base-100 max-w-md">
+                        <h3 className="text-lg font-bold mb-4">입력 내용 확인</h3>
+                        <p className="text-sm text-gray-500 mb-3">다음 정보로 직원을 등록합니다.</p>
+
+                        {(() => {
+                            // 🔹 코드 → 이름 매핑 (없을 경우 fallback)
+                            const deptObj = departments?.find(d => d.value === pendingData?.departmentCode);
+                            const jobObj = jobs?.find(j => j.value === pendingData?.jobCode);
+                            const orgObj = organizations?.find(o => o.value === pendingData?.organizationCode);
+
+                            const deptLabel = deptObj ? `${deptObj.label} (${deptObj.value})` : pendingData?.dept;
+                            const jobLabel = jobObj ? `${jobObj.label} (${jobObj.value})` : pendingData?.job;
+                            const orgLabel = orgObj ? `${orgObj.label} (${orgObj.value})` : pendingData?.organization;
+
+                            return (
+                                <ul className="space-y-1 text-sm">
+                                    <li><strong>이름:</strong> {pendingData?.name}</li>
+                                    <li><strong>부서:</strong> {deptLabel}</li>
+                                    <li><strong>직급:</strong> {jobLabel}</li>
+                                    <li><strong>조직:</strong> {orgLabel}</li>
+                                    <li><strong>입사일:</strong> {pendingData?.hireDate}</li>
+                                    <li><strong>연봉:</strong> {pendingData?.salary}</li>
+                                </ul>
+                            );
+                        })()}
+
+                        <div className="flex justify-end gap-2 mt-6">
+                            <button className="btn btn-ghost" onClick={() => setConfirmModalOpen(false)}>취소</button>
+                            <button className="btn btn-primary" onClick={handleConfirmInsert}>확인</button>
                         </div>
                     </div>
                     <form method="dialog" className="modal-backdrop">
-                        <button onClick={() => setSuccessModalOpen(false)}>close</button>
+                        <button onClick={() => setConfirmModalOpen(false)}>close</button>
                     </form>
                 </dialog>
             )}
+
+            {/* 🔸 등록 완료 모달 */}
+            {resultModalOpen && resultData && (
+                <dialog className="modal modal-open">
+                    <div className="modal-box bg-base-100 max-w-md relative">
+                        {/* 닫기 버튼 */}
+                        <button
+                            className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                            onClick={() => setResultModalOpen(false)}
+                        >
+                            ✕
+                        </button>
+
+                        <h3 className="text-lg font-bold text-center mb-2 text-error">
+                            ⚠️ 이 창을 닫으면 초기 비밀번호를 다시 확인할 수 없습니다.
+                        </h3>
+
+                        <div className="border-t border-gray-200 my-3" />
+
+                        <div className="text-sm space-y-2">
+                            <p><strong>이름:</strong> {resultData.name}</p>
+                            <p><strong>조직 / 부서 / 직급:</strong> {`${resultData.organizationName} / ${resultData.departmentName} / ${resultData.jobName}`}</p>
+                            <p><strong>사원번호:</strong> {resultData.empId}</p>
+                            <div className="flex items-center justify-between">
+                                <p><strong>초기 비밀번호:</strong> {resultData.tempPw}</p>
+                                <button
+                                    className="btn btn-sm btn-outline"
+                                    onClick={() => navigator.clipboard.writeText(resultData.tempPw)}
+                                >
+                                    📋 복사
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="modal-action flex justify-center mt-6">
+                            <button className="btn btn-primary" onClick={() => setResultModalOpen(false)}>
+                                완료
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* ⛔ 창 밖 클릭 방지 */}
+                    <form
+                        method="dialog"
+                        className="modal-backdrop cursor-not-allowed"
+                        onClick={(e) => e.preventDefault()}
+                    >
+                        <button disabled>close</button>
+                    </form>
+                </dialog>
+            )}
+
+            {/* 실패 모달 */}
             {errorModalOpen && (
                 <dialog className="modal modal-open">
                     <div className="modal-box text-center">

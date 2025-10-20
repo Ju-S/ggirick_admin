@@ -76,6 +76,28 @@ const apiRoutes = {
             url: `/employee/${empId}`,
             method: "GET"
         })
+    },
+    hrMeta: {
+        /**
+         * 부서 목록 조회 API<br>
+         * GET /hr-meta/departments<br>
+         * response: DepartmentDTO
+         */
+        departments: { url: `/hr-meta/departments`, method: "GET" },
+
+        /**
+         * 직급 목록 조회 API<br>
+         * GET /hr-meta/jobs<br>
+         * response: JobDTO
+         */
+        jobs: { url: `/hr-meta/jobs`, method: "GET" },
+
+        /**
+         * 조직 목록 조회 API<br>
+         * GET /hr-meta/organizations<br>
+         * response: OrganizationDTO
+         */
+        organizations: { url: `/hr-meta/organizations`, method: "GET" },
     }
 
 };

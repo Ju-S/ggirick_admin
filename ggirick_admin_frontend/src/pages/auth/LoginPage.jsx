@@ -1,14 +1,13 @@
 import { useState } from "react";
 import useEmployeeStore from "../../store/employeeStore.js";
+import useAuthStore from "../../store/authStore.js";
 
 import ggirickLogo from "../../assets/logo/ggirick-header.png";
 
 import {loginAPI} from "../../api/auth/authAPI.js";
 import LoginInputForm from "../../components/auth/LoginInputForm.jsx";
-import useAuthStore from "../../store/authStore.js";
 import {getMyInfoAPI} from "../../api/hr/index.js";
 import {useNavigate} from "react-router-dom";
-
 
 export function LoginPage() {
     // input 입력 값 저장할 상태변수
@@ -27,16 +26,20 @@ export function LoginPage() {
 
     const handleLogin = () => {
         loginAPI(loginInfo)
-            .then((resp) => {
-                const token = resp.data;
+            .then(resp => {
+                const token = resp.data.token;
+                const authority = resp.data.authority;
+
                 if (token != null) {
                     // 로그인 저장
-                    login(token);
+                    login({token, authority});
+
                     // 로그인한 직원 정보 가져오기
-                    getMyInfoAPI(token).then(resp => {
+                    getMyInfoAPI().then(resp => {
                         const myInfo = resp.data;
-                        if(myInfo != null) {
+                        if(myInfo) {
                             setEmployee(myInfo);
+                            console.log(myInfo);
                             navigate("/");
                         }else {
                             alert("정보를 불러오는데 실패했습니다.");
