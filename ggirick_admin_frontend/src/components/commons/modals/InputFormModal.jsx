@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import CommonSelect from "../CommonSelect.jsx";
 
 /**
  * 공용 모달 컴포넌트
@@ -119,26 +120,19 @@ export default function InputFormModal({ isOpen, onClose, onSubmit, title, field
                     {fields.map((field) => {
                         const isError = field.name === errorField;
 
-                        // ✅ 셀렉트 박스
                         if (field.type === "select") {
                             return (
-                                <select
+                                <CommonSelect
                                     key={field.name}
-                                    ref={(el) => (inputRefs.current[field.name] = el)}
-                                    value={formData[field.name] || ""}
-                                    onChange={(e) => handleChange(field.name, e.target.value)}
-                                    className={`select select-bordered w-full transition-all ${
-                                        isError ? "border-red-500 ring-1 ring-red-300" : ""
-                                    }`}
+                                    name={field.name}
+                                    label={field.label}
+                                    value={formData[field.name]}
+                                    options={field.options}
                                     required={field.required}
-                                >
-                                    <option value="">{field.label} 선택</option>
-                                    {field.options?.map((opt) => (
-                                        <option key={opt.value} value={opt.value}>
-                                            {opt.label}
-                                        </option>
-                                    ))}
-                                </select>
+                                    onChange={handleChange}
+                                    error={field.name === errorField}
+                                    innerRef={(el) => (inputRefs.current[field.name] = el)}
+                                />
                             );
                         }
 

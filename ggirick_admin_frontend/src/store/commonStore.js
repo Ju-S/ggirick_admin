@@ -5,11 +5,13 @@ const useCommonStore = create((set) => ({
     departments: [],
     jobs: [],
     organizations: [],
+    employmentStatuses: [],
 
     // setter 메서드들
     setDepartments: (data) => set({ departments: data }),
     setJobs: (data) => set({ jobs: data }),
     setOrganizations: (data) => set({ organizations: data }),
+    setEmploymentStatuses: (data) => set({ employmentStatuses: data }),
 
     // 한꺼번에 세팅하고 싶을 때
     setAllCommonData: (data) => set(data),

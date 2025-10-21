@@ -56,12 +56,8 @@ public class EmployeeDAO {
     }
 
     // 직원 수정
-    public EmployeeDTO updateEmployeeById(EmployeeDTO dto) {
-        int result = mybatis.update("hr.employee.updateById", dto);
-        if(result != 0) {
-            return getEmployeeInfo(dto.getId());
-        }
-        return null;
+    public void updateEmployeeById(EmployeeDTO dto) {
+        mybatis.update("hr.employee.updateEmployeeById", dto);
     }
 
     // 직원 정보 가져오기

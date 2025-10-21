@@ -23,4 +23,9 @@ public class OrganizationDAO {
     public String findOrganizationName(String code) {
         return mybatis.selectOne("hr.organization.findOrganizationName", code);
     }
+
+    // ID로 조직 수정
+    public void updateEmployeeOrganizationById(EmployeeDTO dto) {
+        mybatis.update("hr.organization.updateEmployeeOrganizationById", dto);
+    }
 }

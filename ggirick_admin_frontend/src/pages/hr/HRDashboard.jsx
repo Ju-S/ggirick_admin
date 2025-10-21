@@ -4,8 +4,10 @@ import InputFormModal from "../../components/commons/modals/InputFormModal.jsx";
 import { employeeAllListAPI, insertAPI } from "../../api/hr/index.js";
 import useEmployeeStore from "../../store/employeeStore.js";
 import useCommonStore from "../../store/commonStore.js";
+import EditEmployeeModal from "../../components/hr/EditEmployeeModal.jsx";
 
 export default function HRDashboard() {
+    // 선택한 탭 저장할 상태 변수
     const [activeTab, setActiveTab] = useState("직원 관리");
 
     // 모달 상태들
@@ -13,14 +15,20 @@ export default function HRDashboard() {
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
     const [resultModalOpen, setResultModalOpen] = useState(false);
     const [errorModalOpen, setErrorModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false); // ✅ 직원 수정 모달
 
     // 모달 데이터 상태
     const [pendingData, setPendingData] = useState(null);
     const [resultData, setResultData] = useState(null);
 
     // 공용 스토어
-    const { departments, jobs, organizations } = useCommonStore();
-    const { employeeList, setEmployeeList } = useEmployeeStore();
+    const { departments, jobs, organizations} = useCommonStore();
+    const { employeeList, setEmployeeList, employee, setEmployee } = useEmployeeStore();
+
+    const handleRowClick = (employee) => {
+        setEmployee(employee);          // Zustand에 선택한 직원 저장
+        setIsEditModalOpen(true);       // 수정 모달 열기
+    };
 
     // ✅ 직원 목록 자동 로드
     useEffect(() => {
@@ -141,16 +149,22 @@ export default function HRDashboard() {
                                 </thead>
                                 <tbody>
                                 {employeeList.map((emp) => (
-                                    <tr key={emp.empNo} className="hover">
+                                    <tr
+                                        key={emp.id}
+                                        className="hover cursor-pointer"
+                                        onClick={() => handleRowClick(emp)} // ✅ 클릭 이벤트 추가
+                                    >
                                         <td>{emp.name}</td>
-                                        <td>{emp.empNo}</td>
-                                        <td>{emp.dept}</td>
-                                        <td>{emp.position}</td>
+                                        <td>{emp.id}</td>
+                                        <td>{emp.departmentName}</td>
+                                        <td>{emp.jobName}</td>
                                         <td>{emp.email}</td>
-                                        <td>{emp.hireDate}</td>
+                                        <td>{new Date(emp.hireDate).toLocaleDateString("ko-KR")}</td>
                                         <td>{emp.salary}</td>
                                         <td className="text-center">
-                                            <span className="badge badge-success">{emp.status || "재직"}</span>
+                        <span className="badge badge-success">
+                          {emp.statusName || "재직"}
+                        </span>
                                         </td>
                                     </tr>
                                 ))}
@@ -160,6 +174,12 @@ export default function HRDashboard() {
                     </div>
                 </div>
             )}
+
+            {/* ✅ 직원 수정 모달 */}
+            <EditEmployeeModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+            />
 
             {/* 직원 추가 모달 */}
             <InputFormModal

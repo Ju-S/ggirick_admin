@@ -12,4 +12,11 @@
     <select id="findDepartmentName" resultType="String" parameterType="String">
         SELECT name FROM department WHERE UPPER(code) = UPPER(#{code, jdbcType=VARCHAR})
     </select>
+
+    <!-- 선택한 직원 부서 수정 - 한명 정보 한꺼번에 수정시 사용 -->
+    <update id="updateEmployeeDepartmentById" parameterType="com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO">
+        UPDATE employee_department
+        SET department_code = #{departmentCode}
+        WHERE employee_id = #{id}
+    </update>
 </mapper>

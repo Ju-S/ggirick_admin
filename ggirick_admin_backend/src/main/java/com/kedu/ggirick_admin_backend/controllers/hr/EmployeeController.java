@@ -42,11 +42,9 @@ public class EmployeeController {
 
     // 직원 수정
     @PutMapping
-    public ResponseEntity<EmployeeDTO> updateEmployee(@RequestBody EmployeeDTO dto) {
-        EmployeeDTO updated = employeeService.updateEmployee(dto);
-        return (updated != null)
-                ? ResponseEntity.ok(updated)
-                : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ResponseEntity<String> updateEmployee(@RequestBody EmployeeDTO dto) {
+        employeeService.updateEmployeeById(dto);
+        return ResponseEntity.ok().build();
     }
 
     // 로그인한 사용자 정보 조회

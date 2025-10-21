@@ -1,13 +1,7 @@
 package com.kedu.ggirick_admin_backend.controllers.hr;
 
-import com.kedu.ggirick_admin_backend.dto.common.AuthorityDTO;
-import com.kedu.ggirick_admin_backend.dto.common.DepartmentDTO;
-import com.kedu.ggirick_admin_backend.dto.common.JobDTO;
-import com.kedu.ggirick_admin_backend.dto.common.OrganizationDTO;
-import com.kedu.ggirick_admin_backend.services.hr.AuthorityService;
-import com.kedu.ggirick_admin_backend.services.hr.DepartmentService;
-import com.kedu.ggirick_admin_backend.services.hr.JobService;
-import com.kedu.ggirick_admin_backend.services.hr.OrganizationService;
+import com.kedu.ggirick_admin_backend.dto.common.*;
+import com.kedu.ggirick_admin_backend.services.hr.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +18,7 @@ public class HrMetaController {
     private final JobService jobService;
     private final OrganizationService organizationService;
     private final AuthorityService authorityService;
+    private final EmploymentStatusService employmentStatusService;
 
     @GetMapping("/departments")
     public List<DepartmentDTO> getDepartments() {
@@ -43,5 +38,10 @@ public class HrMetaController {
     @GetMapping("/authorities")
     public List<AuthorityDTO> getAuthorities() {
         return authorityService.getAllAuthorities();
+    }
+
+    @GetMapping("/statuses")
+    public List<EmploymentStatusCodeDTO> getAllEmploymentStatuses() {
+        return employmentStatusService.getAllEmploymentStatuses();
     }
 }

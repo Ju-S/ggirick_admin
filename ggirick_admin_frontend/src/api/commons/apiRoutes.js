@@ -98,6 +98,13 @@ const apiRoutes = {
          * response: OrganizationDTO
          */
         organizations: { url: `/hr-meta/organizations`, method: "GET" },
+
+        /**
+         * 재직 상태 목록 조회 API<br>
+         * GET /hr-meta/statuses<br>
+         * response: EmploymentStatusCodeDTO
+         */
+        employmentStatuses: { url: `/hr-meta/statuses`, method: "GET" }
     }
 
 };

@@ -13,7 +13,10 @@
         SELECT name FROM job WHERE UPPER(code) = UPPER(#{code, jdbcType=VARCHAR})
     </select>
 
-
+    <!-- ID로 직급 코드 가져오기 -->
+    <select id="getJobCodeById" resultType="String" parameterType="String">
+        SELECT job_code FROM employee_job WHERE id = #{id}
+    </select>
 
     <!-- 올해 마지막 사번 조회 -->
     <select id="getLastEmployeeId" parameterType="String" resultType="String">
@@ -21,4 +24,17 @@
         FROM EMPLOYEE
         WHERE SUBSTR(id, 3, 2) = #{yearSuffix}
     </select>
+
+
+
+    <!-- 선택한 직원 직급 수정 - 한명 정보 한꺼번에 수정시 사용 -->
+    <update id="updateEmployeeJobById" parameterType="com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO">
+        UPDATE employee_job
+        SET
+        job_code = #{jobCode}
+        <if test="jobChanged == true">
+            , assigned_at = SYSDATE
+        </if>
+        WHERE employee_id = #{id}
+    </update>
 </mapper>

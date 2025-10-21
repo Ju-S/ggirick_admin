@@ -8,14 +8,86 @@
         SELECT * FROM employee WHERE id = #{id}
     </select>
 
-    <!-- 직원 정보 가져오기 /me, detail -->
+    <!-- 직원 상세 정보 조회 -->
     <select id="getEmployeeInfo" resultType="com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO">
-        SELECT * FROM employee WHERE id = #{id}
+        SELECT
+        e.id,
+        e.name,
+        e.phone,
+        e.extension,
+        e.email,
+        e.profile_url AS profileUrl,
+
+        ej.job_code AS jobCode,
+        j.name AS jobName,
+
+        ed.department_code AS departmentCode,
+        d.name AS departmentName,
+
+        eo.organization_code AS organizationCode,
+        o.name AS organizationName,
+
+        es.change_date AS hireDate,
+        es.employment_status AS status,
+        esc.name AS statusName
+
+        FROM employee e
+
+        LEFT JOIN employee_job ej ON e.id = ej.employee_id
+        LEFT JOIN job j ON ej.job_code = j.code
+
+        LEFT JOIN employee_department ed ON e.id = ed.employee_id
+        LEFT JOIN department d ON ed.department_code = d.code
+
+        LEFT JOIN employee_organization eo ON e.id = eo.employee_id
+        LEFT JOIN organization o ON eo.organization_code = o.code
+
+        LEFT JOIN employment_status es ON e.id = es.emp_id
+        LEFT JOIN employment_status_code esc ON UPPER(es.employment_status) = UPPER(esc.code)
+
+        WHERE e.id = #{id}
     </select>
+
+
 
     <!-- 직원 목록 가져오기 -->
     <select id="getAllEmployeeList" resultType="com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO">
-        SELECT * FROM employee
+        SELECT
+        e.id,
+        e.name,
+        e.phone,
+        e.extension,
+        e.email,
+        e.profile_url AS profileUrl,
+
+        ej.job_code AS jobCode,
+        j.name AS jobName,
+
+        ed.department_code AS departmentCode,
+        d.name AS departmentName,
+
+        eo.organization_code AS organizationCode,
+        o.name AS organizationName,
+
+        es.change_date AS hireDate,
+        es.employment_status AS status,
+        esc.name AS statusName
+
+        FROM employee e
+
+        LEFT JOIN employee_job ej ON e.id = ej.employee_id
+        LEFT JOIN job j ON ej.job_code = j.code
+
+        LEFT JOIN employee_department ed ON e.id = ed.employee_id
+        LEFT JOIN department d ON ed.department_code = d.code
+
+        LEFT JOIN employee_organization eo ON e.id = eo.employee_id
+        LEFT JOIN organization o ON eo.organization_code = o.code
+
+        LEFT JOIN employment_status es ON e.id = es.emp_id
+        LEFT JOIN employment_status_code esc ON UPPER(es.employment_status) = UPPER(esc.code)
+
+        ORDER BY e.id ASC
     </select>
 
     <!-- 올해 마지막 사번 조회 -->
@@ -118,7 +190,7 @@
     </delete>
 
     <!-- 직원 정보 수정 -->
-    <update id="updateById">
+    <update id="updateEmployeeById">
         UPDATE employee SET
         phone = #{phone},
         extension = #{extension},

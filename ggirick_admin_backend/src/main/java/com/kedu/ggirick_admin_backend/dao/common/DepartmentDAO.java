@@ -1,6 +1,7 @@
 package com.kedu.ggirick_admin_backend.dao.common;
 
 import com.kedu.ggirick_admin_backend.dto.common.DepartmentDTO;
+import com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,10 @@ public class DepartmentDAO {
     // 부서 코드 -> 부서명 찾기
     public String findDepartmentName(String code) {
         return mybatis.selectOne("hr.department.findDepartmentName", code);
+    }
+
+    // ID로 부서 수정
+    public void updateEmployeeDepartmentById(EmployeeDTO dto) {
+        mybatis.update("hr.department.updateEmployeeDepartmentById", dto);
     }
 }

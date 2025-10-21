@@ -24,7 +24,14 @@ public class JobDAO {
     }
 
     // ID로 직급 조회
-    public String getJobCodeById(String empId) {
-        return mybatis.selectOne("hr.job.getJobCodeById", empId);
+    public String getJobCodeById(String id) {
+        return mybatis.selectOne("hr.job.getJobCodeById", id);
     }
+
+    // ID로 직급 수정
+    public void updateEmployeeJobById(EmployeeDTO dto) {
+        mybatis.update("hr.job.updateEmployeeJobById", dto);
+    }
+
+
 }
