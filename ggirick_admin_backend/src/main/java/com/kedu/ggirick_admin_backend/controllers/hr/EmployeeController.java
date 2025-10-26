@@ -1,19 +1,16 @@
 package com.kedu.ggirick_admin_backend.controllers.hr;
 
 import com.kedu.ggirick_admin_backend.dto.auth.UserTokenDTO;
-import com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO;
-import com.kedu.ggirick_admin_backend.dto.employee.EmployeeRegisterResultDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.EmployeeRegisterResultDTO;
 import com.kedu.ggirick_admin_backend.services.hr.EmployeeService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/employee")

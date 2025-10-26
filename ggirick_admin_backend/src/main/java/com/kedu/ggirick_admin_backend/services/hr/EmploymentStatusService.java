@@ -1,7 +1,7 @@
 package com.kedu.ggirick_admin_backend.services.hr;
 
-import com.kedu.ggirick_admin_backend.dao.common.EmploymentStatusDAO;
-import com.kedu.ggirick_admin_backend.dto.common.EmploymentStatusCodeDTO;
+import com.kedu.ggirick_admin_backend.dao.employee.EmploymentStatusDAO;
+import com.kedu.ggirick_admin_backend.dto.hr.EmploymentStatusCodeDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

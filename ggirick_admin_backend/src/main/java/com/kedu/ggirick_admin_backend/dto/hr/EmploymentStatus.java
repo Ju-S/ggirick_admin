@@ -1,4 +1,4 @@
-package com.kedu.ggirick_admin_backend.dto.employee;
+package com.kedu.ggirick_admin_backend.dto.hr;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

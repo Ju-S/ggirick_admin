@@ -1,7 +1,6 @@
-package com.kedu.ggirick_admin_backend.dao.common;
+package com.kedu.ggirick_admin_backend.dao.employee;
 
-import com.kedu.ggirick_admin_backend.dto.common.AuthorityDTO;
-import com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.AuthorityDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,6 +14,6 @@ public class AuthorityDAO {
 
     // 권한 목록 조회 ( 메타 데이터 조회용 )
     public List<AuthorityDTO> getAllAuthorities() {
-        return mybatis.selectList("hr.authority.getAllAuthorities");
+        return mybatis.selectList("Authority.getAllAuthorities");
     }
 }

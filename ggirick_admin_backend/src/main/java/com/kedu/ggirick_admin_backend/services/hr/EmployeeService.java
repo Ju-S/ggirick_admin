@@ -1,12 +1,12 @@
 package com.kedu.ggirick_admin_backend.services.hr;
 
-import com.kedu.ggirick_admin_backend.dao.common.DepartmentDAO;
-import com.kedu.ggirick_admin_backend.dao.common.EmploymentStatusDAO;
-import com.kedu.ggirick_admin_backend.dao.common.JobDAO;
-import com.kedu.ggirick_admin_backend.dao.common.OrganizationDAO;
+import com.kedu.ggirick_admin_backend.dao.employee.DepartmentDAO;
+import com.kedu.ggirick_admin_backend.dao.employee.EmploymentStatusDAO;
+import com.kedu.ggirick_admin_backend.dao.employee.JobDAO;
+import com.kedu.ggirick_admin_backend.dao.employee.OrganizationDAO;
 import com.kedu.ggirick_admin_backend.dao.employee.EmployeeDAO;
-import com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO;
-import com.kedu.ggirick_admin_backend.dto.employee.EmployeeRegisterResultDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.EmployeeRegisterResultDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,6 +48,7 @@ public class EmployeeService {
         // 1. 사원번호 자동 생성
         String empId = createEmployeeId();
         dto.setId(empId); // dto에 id 담기
+        System.out.println("사원번호 : " + dto.getId());
 
         // 2. 초기 비밀번호 랜덤(UUID 기반)
         String tempPw = UUID.randomUUID().toString().substring(0, 8); // 8자리만 사용

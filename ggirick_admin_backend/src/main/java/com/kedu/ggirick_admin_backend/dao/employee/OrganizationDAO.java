@@ -1,8 +1,7 @@
-package com.kedu.ggirick_admin_backend.dao.common;
+package com.kedu.ggirick_admin_backend.dao.employee;
 
-import com.kedu.ggirick_admin_backend.dto.common.DepartmentDTO;
-import com.kedu.ggirick_admin_backend.dto.common.OrganizationDTO;
-import com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.OrganizationDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,16 +15,16 @@ public class OrganizationDAO {
 
     // 조직 목록 조회 ( 메타 데이터 조회용 )
     public List<OrganizationDTO> getAllOrganizations() {
-        return mybatis.selectList("hr.organization.getAllOrganizations");
+        return mybatis.selectList("Organization.getAllOrganizations");
     }
 
     // 조직 코드 -> 조직명 찾기
     public String findOrganizationName(String code) {
-        return mybatis.selectOne("hr.organization.findOrganizationName", code);
+        return mybatis.selectOne("Organization.findOrganizationName", code);
     }
 
     // ID로 조직 수정
     public void updateEmployeeOrganizationById(EmployeeDTO dto) {
-        mybatis.update("hr.organization.updateEmployeeOrganizationById", dto);
+        mybatis.update("Organization.updateEmployeeOrganizationById", dto);
     }
 }

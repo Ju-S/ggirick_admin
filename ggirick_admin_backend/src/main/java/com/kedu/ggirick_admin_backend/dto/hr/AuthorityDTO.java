@@ -1,4 +1,4 @@
-package com.kedu.ggirick_admin_backend.dto.common;
+package com.kedu.ggirick_admin_backend.dto.hr;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DepartmentDTO {
-    private String code;
+public class AuthorityDTO {
+    private int id;
+    private int grade;
     private String name;
 }

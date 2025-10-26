@@ -1,7 +1,7 @@
 package com.kedu.ggirick_admin_backend.controllers.auth;
 
 import com.kedu.ggirick_admin_backend.dto.auth.UserTokenDTO;
-import com.kedu.ggirick_admin_backend.dto.employee.EmployeeDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO;
 import com.kedu.ggirick_admin_backend.services.auth.AuthService;
 import com.kedu.ggirick_admin_backend.services.hr.EmployeeService;
 import com.kedu.ggirick_admin_backend.utils.JWTUtil;
@@ -24,6 +24,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody EmployeeDTO loginInfo) {
         System.out.println(loginInfo.getId());
+        System.out.println(loginInfo.getPw());
         EmployeeDTO loginDTO = employeeService.login(loginInfo);
         if (loginDTO != null) {
             // 인증 토큰 생성

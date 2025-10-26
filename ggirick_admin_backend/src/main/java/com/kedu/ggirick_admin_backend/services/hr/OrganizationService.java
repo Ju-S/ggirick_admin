@@ -1,8 +1,7 @@
 package com.kedu.ggirick_admin_backend.services.hr;
 
-import com.kedu.ggirick_admin_backend.dao.common.OrganizationDAO;
-import com.kedu.ggirick_admin_backend.dto.common.DepartmentDTO;
-import com.kedu.ggirick_admin_backend.dto.common.OrganizationDTO;
+import com.kedu.ggirick_admin_backend.dao.employee.OrganizationDAO;
+import com.kedu.ggirick_admin_backend.dto.hr.OrganizationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
