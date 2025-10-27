@@ -69,7 +69,7 @@
         eo.organization_code AS organizationCode,
         o.name AS organizationName,
 
-        es.change_date AS hireDate,
+        es.reg_date AS hireDate,
         es.employment_status AS status,
         esc.name AS statusName
 
@@ -111,6 +111,7 @@
         #{profileUrl, jdbcType=VARCHAR}
         )
     </insert>
+
     <!-- 직원-부서 등록 -->
     <insert id="insertEmployeeDepartment">
         INSERT INTO employee_department (
@@ -124,7 +125,7 @@
         )
     </insert>
 
-    <!-- 재직 상태 등록 (기본 active) -->
+    <!-- 재직 상태 등록 (기본 ACTIVE) -->
     <insert id="insertEmploymentStatus">
         INSERT INTO employment_status (
         seq,
@@ -134,7 +135,7 @@
         ) VALUES (
         employment_status_seq.NEXTVAL,
         #{empId, jdbcType=VARCHAR},
-        'active',
+        'ACTIVE',
         SYSDATE
         )
     </insert>

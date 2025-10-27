@@ -14,9 +14,9 @@
     <update id="updateEmploymentStatusById" parameterType="com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO">
         UPDATE employment_status
         SET
-        employment_status = #{status},
-        change_date = #{hireDate},
-        reg_date = sysdate
+        employment_status = UPPER(#{status}),   <!-- 대문자 변환 -->
+        reg_date = #{hireDate},
+        change_date = SYSDATE
         WHERE emp_id = #{id}
     </update>
 </mapper>

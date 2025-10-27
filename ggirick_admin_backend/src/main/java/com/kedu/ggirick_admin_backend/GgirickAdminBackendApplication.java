@@ -2,6 +2,7 @@ package com.kedu.ggirick_admin_backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 public class GgirickAdminBackendApplication {

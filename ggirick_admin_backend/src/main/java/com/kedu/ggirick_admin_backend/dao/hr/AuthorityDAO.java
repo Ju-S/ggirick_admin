@@ -1,4 +1,4 @@
-package com.kedu.ggirick_admin_backend.dao.employee;
+package com.kedu.ggirick_admin_backend.dao.hr;
 
 import com.kedu.ggirick_admin_backend.dto.hr.AuthorityDTO;
 import lombok.RequiredArgsConstructor;

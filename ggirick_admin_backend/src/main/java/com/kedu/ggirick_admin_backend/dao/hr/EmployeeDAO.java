@@ -1,4 +1,4 @@
-package com.kedu.ggirick_admin_backend.dao.employee;
+package com.kedu.ggirick_admin_backend.dao.hr;
 
 import com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +49,11 @@ public class EmployeeDAO {
         return mybatis.insert("Employee.insertEmploymentStatus", empId);
     }
 
+    // 초기 비밀번호 변경 여부 테이블에 등록
+    public int insertPasswordReset(String empId) {
+        return mybatis.insert("Employee.insertPasswordReset", empId);
+    }
+
     // ------------------------------------------
     // 직원 삭제
     public void deleteEmployeeById(String id) {
@@ -68,11 +73,6 @@ public class EmployeeDAO {
     // 직원 전체 목록 가져오기
     public List<EmployeeDTO> getAllEmployeeList() {
         return mybatis.selectList("Employee.getAllEmployeeList");
-    }
-
-    // 초기 비밀번호 변경 여부 테이블에 등록
-    public int insertPasswordReset(String empId) {
-        return mybatis.insert("Employee.insertPasswordReset", empId);
     }
 
     // 비밀번호 변경

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmploymentStatus {
+public class EmploymentStatusDTO {
     private int seq;
     private String empId;
     private String employmentStatus;

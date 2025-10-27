@@ -1,10 +1,10 @@
 package com.kedu.ggirick_admin_backend.services.hr;
 
-import com.kedu.ggirick_admin_backend.dao.employee.DepartmentDAO;
-import com.kedu.ggirick_admin_backend.dao.employee.EmploymentStatusDAO;
-import com.kedu.ggirick_admin_backend.dao.employee.JobDAO;
-import com.kedu.ggirick_admin_backend.dao.employee.OrganizationDAO;
-import com.kedu.ggirick_admin_backend.dao.employee.EmployeeDAO;
+import com.kedu.ggirick_admin_backend.dao.hr.DepartmentDAO;
+import com.kedu.ggirick_admin_backend.dao.hr.EmploymentStatusDAO;
+import com.kedu.ggirick_admin_backend.dao.hr.JobDAO;
+import com.kedu.ggirick_admin_backend.dao.hr.OrganizationDAO;
+import com.kedu.ggirick_admin_backend.dao.hr.EmployeeDAO;
 import com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO;
 import com.kedu.ggirick_admin_backend.dto.hr.EmployeeRegisterResultDTO;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,7 @@ public class EmployeeService {
     private final JobDAO jobDAO;
     private final OrganizationDAO organizationDAO;
     private final EmploymentStatusDAO employmentStatusDAO;
+    private final VacationService vacationService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -77,6 +78,9 @@ public class EmployeeService {
                 && isInsertEmployeeOrganization && isInsertEmployeeAuthority
                 && isInsertPwReset) {
 
+            // 신규 직원 연차 자동 생성
+            vacationService.registerAnnualLeaveByHireDate(dto.getId());
+
             // 새로 등록된 직원 정보 조회 - 안내용
             EmployeeRegisterResultDTO newDTO = new EmployeeRegisterResultDTO();
             newDTO.setEmpId(empId); // 사원번호
@@ -105,21 +109,44 @@ public class EmployeeService {
     }
 
     // 사원 정보 수정
-    @Transactional // 트랜잭션 묶기
-    public void updateEmployeeById(EmployeeDTO dto) {
-        // 1. 현재 직급 조회
+    @Transactional
+    public EmployeeDTO updateEmployeeById(EmployeeDTO dto) {
+        // 1️⃣ 기존 DB 값 조회 (조인된 hireDate 포함)
+        EmployeeDTO beforeEmployee = employeeDAO.getEmployeeInfo(dto.getId());
+        if (beforeEmployee == null) {
+            throw new IllegalArgumentException("해당 사원을 찾을 수 없습니다: " + dto.getId());
+        }
+
+        // 2️⃣ 직급 비교
         String currentJobCode = jobDAO.getJobCodeById(dto.getId());
-        // 2. 직급이 바뀌면 boolean 값 저장 - 바뀌면 true, 같으면 false
         dto.setJobChanged(!Objects.equals(currentJobCode, dto.getJobCode()));
 
-        // 3. 트랜잭션 내에서 순차 실행
+        // 3️⃣ 입사일 변경 여부 비교 (hireDate vs reg_date)
+        boolean hireDateChanged = false;
+        if (beforeEmployee.getHireDate() != null && dto.getHireDate() != null) {
+            hireDateChanged = !beforeEmployee.getHireDate().equals(dto.getHireDate());
+        }
+
+        System.out.println("before: " + beforeEmployee.getHireDate());
+        System.out.println("after: " + dto.getHireDate());
+        System.out.println("equals? " + beforeEmployee.getHireDate().equals(dto.getHireDate()));
+
+        // 4️⃣ 기본 인적/부서/직급/조직/재직 상태 업데이트
         employeeDAO.updateEmployeeById(dto);
         departmentDAO.updateEmployeeDepartmentById(dto);
         jobDAO.updateEmployeeJobById(dto);
         organizationDAO.updateEmployeeOrganizationById(dto);
-        employmentStatusDAO.updateEmploymentStatusById(dto);
-    }
+        employmentStatusDAO.updateEmploymentStatusById(dto); // ← 여기서 reg_date 업데이트됨
 
+        // 5️⃣ 입사일이 바뀌었을 때만 휴가 자동 재계산
+        if (hireDateChanged) {
+            vacationService.registerAnnualLeaveByHireDate(dto.getId());
+            System.out.println("✅ 입사일 변경 감지: " + dto.getHireDate() + " → 휴가 자동 재계산 완료");
+        }
+
+        // 다시 DB에서 조회해서 리턴
+        return employeeDAO.getEmployeeInfo(dto.getId());
+    }
 
     // 사원 한명 정보
     public EmployeeDTO getEmployeeInfo(String id) {

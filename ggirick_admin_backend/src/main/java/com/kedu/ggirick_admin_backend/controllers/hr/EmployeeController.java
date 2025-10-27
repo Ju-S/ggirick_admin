@@ -25,9 +25,7 @@ public class EmployeeController {
         // 직원 등록 후 직원 정보 담아오기 ( 초기 비밀번호 안내용 )
         EmployeeRegisterResultDTO newEmployeeDTO = employeeService.insertEmployee(dto);
 
-        return (newEmployeeDTO != null)
-                ? ResponseEntity.ok(newEmployeeDTO)
-                : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.ok(newEmployeeDTO);
     }
 
     // 직원 삭제
@@ -39,9 +37,9 @@ public class EmployeeController {
 
     // 직원 수정
     @PutMapping
-    public ResponseEntity<String> updateEmployee(@RequestBody EmployeeDTO dto) {
-        employeeService.updateEmployeeById(dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<EmployeeDTO> updateEmployee(@RequestBody EmployeeDTO dto) {
+        EmployeeDTO updateDTO = employeeService.updateEmployeeById(dto);
+        return ResponseEntity.ok(updateDTO);
     }
 
     // 로그인한 사용자 정보 조회
@@ -50,9 +48,7 @@ public class EmployeeController {
         System.out.println("토큰으로 정보 가져오기");
         String id = userInfo.getId();
         System.out.println("가져온 아이디 : " + id);
-        if (id == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+
         EmployeeDTO myInfo = employeeService.getEmployeeInfo(id);
         return ResponseEntity.ok(myInfo);
     }
@@ -61,9 +57,7 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDTO> getEmployeeDetail(@PathVariable String id) {
         EmployeeDTO dto = employeeService.getEmployeeInfo(id);
-        return (dto != null)
-                ? ResponseEntity.ok(dto)
-                : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.ok(dto);
     }
 
     // 직원 목록 조회
@@ -77,8 +71,13 @@ public class EmployeeController {
     @PutMapping("/password/{id}")
     public ResponseEntity<Void> updatePassword(@PathVariable String id, @RequestBody EmployeeDTO dto) {
         dto.setId(id);
-        boolean success = employeeService.updatePassword(dto);
-        return success ? ResponseEntity.ok().build()
-                : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        employeeService.updatePassword(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Void> error(Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }
