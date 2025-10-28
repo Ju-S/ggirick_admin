@@ -9,7 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -23,19 +26,49 @@ public class VacationService {
     private final EmployeeVacationDAO employeeVacationDAO;
     private final VacationLogDAO vacationLogDAO;
 
-    // 직원 등록시 입사일 기준으로 기준 연차 자동 계산 및 등록
     @Transactional
     public void registerAnnualLeaveByHireDate(String employeeId) {
         EmployeeDTO employeeDTO = employeeDAO.getEmployeeInfo(employeeId);
         if (employeeDTO == null) return;
 
-        // AnnualLeaveGrantDTO를 만들어서 기존 메서드 재활용
+        // 1️⃣ 입사일 확인 로그
+        Date hireDate = employeeDTO.getHireDate();
+        System.out.println("✅ 입사일 기준 연차 계산 시작");
+        System.out.println("Hire Date: " + hireDate);
+
+        // 2️⃣ 근속연수 계산
+        LocalDate hireLocalDate = hireDate.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        LocalDate now = LocalDate.now();
+
+        int years = Period.between(hireLocalDate, now).getYears();
+        System.out.println("근속연수(years): " + years);
+
+        // ✅ 1년 미만: 0일 / 1년차: 15일 / 이후 2년에 1일씩 가산
+        int daysGranted;
+        if (years < 1) {
+            daysGranted = 0;
+        } else {
+            int extra = (years - 1) / 2;  // 2년에 1일씩 증가
+            daysGranted = Math.min(25, 15 + extra);
+        }
+
+        System.out.println("🎯 계산된 연차일수(daysGranted): " + daysGranted);
+
+        // 3️⃣ DTO 세팅
         AnnualLeaveGrantDTO dto = new AnnualLeaveGrantDTO();
         dto.setEmployeeId(employeeId);
+        dto.setDaysGranted(daysGranted);
+        dto.setGrantDate(Date.from(Instant.now()));
+        dto.setExpireDate(Date.from(Instant.now().plus(365, ChronoUnit.DAYS)));
+        dto.setReason("입사일 기준 자동 부여");
 
-        registerAnnualLeave(dto); // 기존 메서드 호출 (로직 중복 방지)
+        // 4️⃣ 등록 실행
+        registerAnnualLeave(dto);
 
-        employeeVacationDAO.updateRemaining(employeeId); // 잔여 휴가 갱신
+        // 5️⃣ 잔여 휴가 갱신
+        employeeVacationDAO.updateRemaining(employeeId);
     }
 
     // 입사일 기준 연차 자동 계산 및 등록

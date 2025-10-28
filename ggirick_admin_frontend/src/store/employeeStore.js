@@ -28,8 +28,18 @@ const useEmployeeStore = create((set) => ({
     employmentHistory: [],
 
     // CRUD 메서드들
-    // 전체 사원 목록
+    // 전체 리스트 한 번에 세팅
     setEmployeeList: (list) => set({ employeeList: list }),
+
+    // 특정 직원 1명만 업데이트
+    updateEmployeeList: (updatedEmp) =>
+        set((state) => ({
+            employeeList: Array.isArray(state.employeeList)
+                ? state.employeeList.map((emp) =>
+                    emp.id === updatedEmp.id ? { ...updatedEmp } : emp
+                )
+                : [updatedEmp],
+        })),
 
     // 사용자 등록
     setEmployee: (employee) => set({ employee: employee }),

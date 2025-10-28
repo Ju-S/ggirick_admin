@@ -40,10 +40,12 @@ export default function HRDashboard() {
     }, []);
 
     // ✅ 직원 추가 - 1단계 (InputFormModal에서 전달)
-    const handleEmployeeInsert = (data) => {
-        // 등록하는 경우만 확인창 띄우기
+    const handleEmployeeInsert = (data, resetForm) => {
         setPendingData(data);
         setConfirmModalOpen(true);
+
+        // 등록 후 다시 resetForm을 쓰기 위해 저장해둠
+        handleEmployeeInsert.resetForm = resetForm;
     };
 
     // ✅ 직원 추가 - 2단계 (입력내용 확인 후 실제 등록)
@@ -53,10 +55,16 @@ export default function HRDashboard() {
                 if (res.data) {
                     setResultData(res.data); // DTO 저장
                     setResultModalOpen(true);
-                    // 목록 갱신
+
+                    // 등록 성공 후 목록 갱신
                     employeeAllListAPI().then((listRes) => {
                         if (listRes.data) setEmployeeList(listRes.data);
                     });
+
+                    // 등록 성공 시 폼 초기화
+                    if (handleEmployeeInsert.resetForm) {
+                        handleEmployeeInsert.resetForm();
+                    }
                 } else {
                     setErrorModalOpen(true);
                 }

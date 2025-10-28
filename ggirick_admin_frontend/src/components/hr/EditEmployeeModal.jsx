@@ -5,7 +5,7 @@ import CommonSelect from "../commons/CommonSelect.jsx";
 import {employeeAllListAPI, updateEmployeeAPI} from "../../api/hr/index.js";
 
 export default function EditEmployeeModal({ isOpen, onClose }) {
-    const { employee, updateEmployee, setEmployeeList } = useEmployeeStore();
+    const { employee, updateEmployee, setEmployeeList, updateEmployeeList } = useEmployeeStore();
     const { departments, jobs, organizations, employmentStatuses } = useCommonStore(); // ✅ employmentStatuses 추가
 
     const [emailCheckResult, setEmailCheckResult] = useState(null);
@@ -32,14 +32,11 @@ export default function EditEmployeeModal({ isOpen, onClose }) {
             if (resp) {
                 alert("직원 정보가 수정되었습니다 ✅");
 
-                // ✅ 기존 배열 중 동일 id 교체
-                setEmployeeList((prev) =>
-                    Array.isArray(prev)
-                        ? prev.map((emp) =>
-                            emp.id === resp.id ? resp : emp
-                        )
-                        : [resp]
-                );
+                // 기존 배열 중 동일 id 교체
+                updateEmployeeList(resp);
+                // 다시 직원 목록 불러오기
+                const refreshed = await employeeAllListAPI();
+                setEmployeeList(refreshed.data);
                 onClose();
             } else {
                 alert("수정 중 오류가 발생했습니다 ❌");

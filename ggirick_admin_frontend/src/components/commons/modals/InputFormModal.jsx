@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CommonSelect from "../CommonSelect.jsx";
@@ -14,6 +14,18 @@ export default function InputFormModal({ isOpen, onClose, onSubmit, title, field
     const [confirmModalOpen, setConfirmModalOpen] = useState(false); // 확인 모달
     const [pendingData, setPendingData] = useState(null); // 대기 데이터
 
+    // 모달 데이터 초기화
+    useEffect(() => {
+        if (!isOpen) {
+            // 모달이 닫히면 입력값 초기화
+            setFormData({});
+            Object.keys(inputRefs.current).forEach((key) => {
+                if (inputRefs.current[key]) inputRefs.current[key].value = "";
+            });
+        }
+    }, [isOpen]);
+
+    
     // 오늘 날짜 (전역 사용)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
