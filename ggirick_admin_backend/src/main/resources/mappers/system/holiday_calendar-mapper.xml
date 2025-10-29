@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="HolidayCalendar">
+
+    <!-- 중복체크 -->
+    <select id="exists" resultType="int">
+        SELECT COUNT(*)
+        FROM HOLIDAY_CALENDAR
+        WHERE CAL_DATE = #{calDate}
+    </select>
+
+    <!-- 신규등록 -->
+    <insert id="insert" parameterType="com.kedu.ggirick_admin_backend.dto.system.HolidayCalendarDTO"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
+        INSERT INTO HOLIDAY_CALENDAR (
+        ID, CAL_DATE, IS_WORKDAY, HOLIDAY_TYPE, DESCRIPTION, CREATED_AT
+        ) VALUES (
+        HOLIDAY_CALENDAR_SEQ.NEXTVAL,
+        #{calDate},
+        #{isWorkday},
+        #{holidayType},
+        #{description},
+        SYSDATE
+        )
+    </insert>
+
+</mapper>
