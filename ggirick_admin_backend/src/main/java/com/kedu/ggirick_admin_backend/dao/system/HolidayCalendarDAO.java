@@ -14,12 +14,12 @@ public class HolidayCalendarDAO {
 
     // 중복 체크
     public boolean exists(LocalDate date) {
-        Integer count = mybatis.selectOne("system.HolidayCalendar.exists", date);
+        Integer count = mybatis.selectOne("HolidayCalendar.exists", date);
         return count != null && count > 0;
     }
 
     // 휴일 입력
     public void insert(HolidayCalendarDTO dto) {
-        mybatis.insert("system.HolidayCalendar.insert", dto);
+        mybatis.insert("HolidayCalendar.insert", dto);
     }
 }

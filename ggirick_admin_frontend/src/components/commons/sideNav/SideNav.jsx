@@ -63,83 +63,7 @@ export default function SideNav() {
                     <li>
                         <button
                             type="button"
-                            onClick={() => navigate("/ggirick_wireframe/board")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
-                        >
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
-                                fill="currentColor"
-                                viewBox="0 0 15 17"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M4 3.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5z" />
-                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1" />
-                            </svg>
-                            <span className="ml-3">게시판</span>
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/ggirick_wireframe/approval")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
-                        >
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
-                                fill="currentColor"
-                                viewBox="0 -1 15 19"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m1.354 4.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708.708" />
-                            </svg>
-                            <span className="ml-3 flex-1 text-left whitespace-nowrap">
-                전자결재
-              </span>
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            ></svg>
-                            <span className="text-primary-800 bg-primary-100 dark:bg-primary-200 dark:text-primary-800 inline-flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold">
-                4
-              </span>
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/ggirick_wireframe/calendar")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
-                        >
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
-                                fill="currentColor"
-                                viewBox="0 -2 15 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
-                            </svg>
-                            <span className="ml-3 flex-1 text-left whitespace-nowrap">
-                일정
-              </span>
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            ></svg>
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/ggirick_wireframe/workmanagement")}
+                            onClick={() => navigate("/hrdashboard")}
                             className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
                         >
                             <svg
@@ -153,42 +77,16 @@ export default function SideNav() {
                                 <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                             </svg>
                             <span className="ml-3 flex-1 text-left whitespace-nowrap">
-                근무처리
+                HR 시스템
               </span>
                         </button>
                     </li>
+                </ul>
+                <ul className="mt-5 space-y-2 border-t border-gray-200 pt-5 dark:border-gray-700">
                     <li>
                         <button
                             type="button"
-                            onClick={() => navigate("/ggirick_wireframe/reservation")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
-                        >
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
-                                fill="currentColor"
-                                viewBox="0 -2 15 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0" />
-                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
-                            </svg>
-                            <span className="ml-3 flex-1 text-left whitespace-nowrap">
-                예약
-              </span>
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            ></svg>
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/ggirick_wireframe/task")}
+                            onClick={() => navigate("/task")}
                             className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
                         >
                             <svg
@@ -205,7 +103,7 @@ export default function SideNav() {
                                     clip-rule="evenodd"
                                 ></path>
                             </svg>
-                            <span className="ml-3">업무관리</span>
+                            <span className="ml-3">시스템 관리</span>
                         </button>
                     </li>
                 </ul>
@@ -213,102 +111,7 @@ export default function SideNav() {
                     <li>
                         <button
                             type="button"
-                            onClick={() => navigate("/ggirick_wireframe/mail")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
-                        >
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
-                                fill="currentColor"
-                                viewBox="0 -2 15 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
-                            </svg>
-                            <span className="ml-3 flex-1 text-left whitespace-nowrap">
-                메일
-              </span>
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            ></svg>
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/ggirick_wireframe/address")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
-                        >
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
-                                fill="currentColor"
-                                viewBox="0 -2 15 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
-                                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
-                            </svg>
-                            <span className="ml-3 flex-1 text-left whitespace-nowrap">
-                주소록
-              </span>
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            ></svg>
-                        </button>
-                    </li>
-                </ul>
-                <ul className="mt-5 space-y-2 border-t border-gray-200 pt-5 dark:border-gray-700">
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/ggirick_wireframe/chat")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
-                        >
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
-                                fill="currentColor"
-                                viewBox="0 -2 15 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
-                            </svg>
-                            <span className="ml-3">메신저</span>
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/ggirick_wireframe/drive")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
-                        >
-                            <svg
-                                aria-hidden="true"
-                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
-                                fill="currentColor"
-                                viewBox="0 -2 15 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3m-8.322.12q.322-.119.684-.12h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981z" />
-                            </svg>
-                            <span className="ml-3">드라이브</span>
-                        </button>
-                    </li>
-                </ul>
-                <ul className="mt-5 space-y-2 border-t border-gray-200 pt-5 dark:border-gray-700">
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/ggirick_wireframe/organization")}
+                            onClick={() => navigate("/organization")}
                             className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
                         >
                             <svg
