@@ -15,13 +15,14 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .anyRequest().permitAll() // 요청을 허용할 url
+                        .anyRequest().permitAll() // 전체 허용
                 )
                 .build();
     }
@@ -29,10 +30,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // 요청을 허용할 origin
-        configuration.setAllowedMethods(List.of("*")); // 요청을 허용할 method(get/post/put/delete 등)
-        configuration.setAllowedHeaders(List.of("*")); // 요청을 허용할 header
+
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:5728",
+                "http://10.5.5.8:5728",
+                "http://192.168.219.110:5728"
+        ));
+
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L); // Preflight 캐시 1시간 유지
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -41,6 +49,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // BCrypt방식으로 암호화.
+        return new BCryptPasswordEncoder();
     }
 }
