@@ -1,7 +1,11 @@
 package com.kedu.ggirick_admin_backend.controllers.hr;
 
+import com.kedu.ggirick_admin_backend.dto.hr.JobDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.OrganizationDTO;
 import com.kedu.ggirick_admin_backend.services.hr.OrganizationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,38 +14,35 @@ import org.springframework.web.bind.annotation.*;
 public class OrganizationController {
 
     private final OrganizationService organizationService;
-//
-//    @GetMapping("/list")
-//    public ResponseEntity<List<OrganizationDTO>> getAllOrganizations() {
-//        return ResponseEntity.ok(organizationService.getAll());
-//    }
-//
-//    @GetMapping("/{code}")
-//    public ResponseEntity<OrganizationDTO> getOrganization(@PathVariable String code) {
-//        return ResponseEntity.ok(organizationService.getByCode(code));
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<Void> create(@RequestBody OrganizationDTO dto) {
-//        organizationService.create(dto);
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @PutMapping
-//    public ResponseEntity<Void> update(@RequestBody OrganizationDTO dto) {
-//        organizationService.update(dto);
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @DeleteMapping("/{code}")
-//    public ResponseEntity<Void> delete(@PathVariable String code) {
-//        organizationService.delete(code);
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @GetMapping("/{code}/employees")
-//    public ResponseEntity<List<EmployeeDTO>> getEmployees(@PathVariable String code) {
-//        return ResponseEntity.ok(organizationService.getEmployeesByOrg(code));
-//    }
+
+    // 조직 등록
+    @PostMapping
+    public ResponseEntity<String> insertOrganization(@RequestBody OrganizationDTO  dto) {
+        boolean result = organizationService.insertOrganization(dto);
+        if (result) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409 중복 코드
+    }
+
+    // 조직 수정
+    @PutMapping
+    public ResponseEntity<String> updateOrganizationNameByCode(@RequestBody OrganizationDTO dto) {
+        organizationService.updateOrganizationNameByCode(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    // 조직 삭제
+    @DeleteMapping("/{orgCode}")
+    public ResponseEntity<String> deleteOrganizationByCode(@PathVariable("orgCode") String code) {
+        organizationService.deleteOrganizationByCode(code);
+        return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Void> error(Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 }
 

@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,15 +24,38 @@ public class JobDAO {
         return mybatis.selectOne("Job.findJobName", code);
     }
 
-    // ID로 직급 조회
+    // employeeID로 직급 조회
     public String getJobCodeById(String id) {
         return mybatis.selectOne("Job.getJobCodeById", id);
     }
 
-    // ID로 직급 수정
+    // employeeID로 직급 수정
     public void updateEmployeeJobById(EmployeeDTO dto) {
         mybatis.update("Job.updateEmployeeJobById", dto);
     }
 
+    // 직급 등록
+    public void insertJob(JobDTO dto) {
+        mybatis.insert("Job.insertJob", dto);
+    }
 
+    // 직급 수정
+    public void updateJobNameByCode(JobDTO dto) {
+        mybatis.update("Job.updateJobNameByCode", dto);
+    }
+
+    // 직급 삭제
+    public void deleteJobByCode(String code) {
+        mybatis.delete("Job.deleteJobByCode", code);
+    }
+
+    // 직급 코드 중복 확인
+    public int checkDuplicateJobCode(String code) {
+        return mybatis.selectOne("Job.checkDuplicateJobCode", code);
+    }
+
+    // 직급 새로 등록 -> 전체 수정
+    public void insertJobAndUpdateRankOrder(Map<String, Object> param) {
+        mybatis.update("Job.insertJobAndUpdateRankOrder", param);
+    }
 }

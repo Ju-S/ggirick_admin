@@ -1,12 +1,12 @@
-import { useState } from "react";
-import useEmployeeStore from "../../store/employeeStore.js";
-import useAuthStore from "../../store/authStore.js";
+import React, { useState } from "react";
+import useEmployeeStore from "../../store/hr/employeeStore.js";
+import useAuthStore from "../../store/auth/authStore.js";
 
-import ggirickLogo from "../../assets/logo/ggirick-header.png";
+import Logo from '../../assets/logo/ggirick-header.svg?react';
 
-import {loginAPI} from "../../api/auth/authAPI.js";
+import {loginAPI} from "@/api/auth/authAPI.js";
 import LoginInputForm from "../../components/auth/LoginInputForm.jsx";
-import {getMyInfoAPI} from "../../api/hr/index.js";
+import {getMyInfoAPI} from "@/api/hr/index.js";
 import {useNavigate} from "react-router-dom";
 
 export function LoginPage() {
@@ -24,38 +24,43 @@ export function LoginPage() {
     const login = useAuthStore(state => state.login);
 
 
-    const handleLogin = () => {
-        loginAPI(loginInfo)
-            .then(resp => {
-                const token = resp.data.token;
-                const authority = resp.data.authority;
+    const handleLogin = async () => {
+        try {
+            const resp = await loginAPI(loginInfo);
+            const { token, authority } = resp.data;
 
-                if (token != null) {
-                    // 로그인 저장
-                    login({token, authority});
+            if (!token) {
+                alert("회원정보가 일치하지 않습니다.");
+                return;
+            }
 
-                    // 로그인한 직원 정보 가져오기
-                    getMyInfoAPI().then(resp => {
-                        const myInfo = resp.data;
-                        if(myInfo) {
-                            setEmployee(myInfo);
-                            console.log(myInfo);
-                            navigate("/");
-                        }else {
-                            alert("정보를 불러오는데 실패했습니다.");
-                        }
-                    });
-                } else {
-                    alert("회원정보가 일치하지 않습니다.");
-                }
-            })
-            .catch(() => alert("로그인 실패"))
-            .finally(() => setLoginInfo({ id: "", pw: "" }));
+            // 로그인 토큰 저장
+            login({ token, authority });
+
+            // 본인 정보 조회
+            const meResp = await getMyInfoAPI();
+            if (meResp.status === 200 && meResp.data) {
+                setEmployee(meResp.data); // 스토어에 저장
+                console.log("로그인 성공 / 사용자 정보:", meResp.data);
+                navigate("/");
+            } else {
+                alert("사용자 정보를 불러오는데 실패했습니다.");
+            }
+        } catch (err) {
+            console.error("로그인 실패:", err);
+            alert("로그인 실패. 아이디나 비밀번호를 확인해주세요.");
+        } finally {
+            setLoginInfo({ id: "", pw: "" });
+        }
     };
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-base-200">
-            <img src={ggirickLogo} alt="회사 로고" className="w-40 mb-8" />
+            <div className="flex items-center justify-start">
+                <button onClick={() => navigate("/")} className="mr-4 flex items-center justify-between">
+                    <Logo width={120} height={50}/>
+                </button>
+            </div>
 
             <div className="card w-96 bg-base-100 shadow-xl">
                 <div className="card-body">

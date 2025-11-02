@@ -1,12 +1,17 @@
 import { useState } from "react";
-import useEmployeeStore from "../../store/employeeStore.js";
-import useCommonStore from "../../store/commonStore.js";
-import CommonSelect from "../commons/CommonSelect.jsx";
-import {employeeAllListAPI, updateEmployeeAPI} from "../../api/hr/index.js";
+import useEmployeeStore from "../../../store/hr/employeeStore.js";
+import CommonSelect from "../CommonSelect.jsx";
+import {emailDuplCheckAPI, employeeAllListAPI, updateEmployeeAPI} from "@/api/hr/index.js";
+import useDepartmentStore from "@/store/hr/departmentStore.js";
+import useJobStore from "@/store/hr/jobStore.js";
+import useOrganizationStore from "@/store/hr/organizationStore.js";
 
 export default function EditEmployeeModal({ isOpen, onClose }) {
     const { employee, updateEmployee, setEmployeeList, updateEmployeeList } = useEmployeeStore();
-    const { departments, jobs, organizations, employmentStatuses } = useCommonStore(); // ✅ employmentStatuses 추가
+    const { departments } = useDepartmentStore();
+    const { jobs } = useJobStore();
+    const { organizations } = useOrganizationStore();
+    const { employmentStatuses } = useEmployeeStore();
 
     const [emailCheckResult, setEmailCheckResult] = useState(null);
 
@@ -14,7 +19,7 @@ export default function EditEmployeeModal({ isOpen, onClose }) {
     const checkEmailDuplicate = async () => {
         if (!employee.email) return alert("이메일을 입력해주세요.");
         try {
-            const res = await fetch(`/api/employees/check-email?email=${employee.email}`);
+            const res = await emailDuplCheckAPI(employee.email);
             const data = await res.json();
             if (data.exists) setEmailCheckResult("이미 사용 중인 이메일입니다 ❌");
             else setEmailCheckResult("사용 가능한 이메일입니다 ✅");

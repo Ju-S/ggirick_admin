@@ -19,4 +19,31 @@
         SET department_code = #{departmentCode}
         WHERE employee_id = #{id}
     </update>
+
+    <!-- 코드 중복 확인 -->
+    <select id="checkDuplicateDepartmentCode" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM DEPARTMENT
+        WHERE UPPER(CODE) = UPPER(#{code})
+    </select>
+
+    <!-- 부서 등록 -->
+    <insert id="insertDepartment" parameterType="com.kedu.ggirick_admin_backend.dto.hr.DepartmentDTO">
+        INSERT INTO DEPARTMENT (CODE, NAME)
+        VALUES (#{code}, #{name})
+    </insert>
+
+    <!-- 부서 수정 -->
+    <update id="updateDepNameByCode" parameterType="com.kedu.ggirick_admin_backend.dto.hr.DepartmentDTO">
+        UPDATE DEPARTMENT
+        SET NAME = #{name}
+        WHERE CODE = #{code}
+    </update>
+
+    <!-- 부서 삭제 -->
+    <delete id="deleteDepartmentByCode" parameterType="string">
+        DELETE FROM DEPARTMENT
+        WHERE CODE = #{code}
+    </delete>
+
 </mapper>

@@ -27,4 +27,31 @@
         )
     </insert>
 
+    <!-- 전체 공휴일 목록 -->
+    <select id="selectAll" resultType="com.kedu.ggirick_admin_backend.dto.system.HolidayCalendarDTO">
+        SELECT ID,
+        CAL_DATE AS calDate,
+        IS_WORKDAY AS isWorkday,
+        HOLIDAY_TYPE AS holidayType,
+        DESCRIPTION
+        FROM HOLIDAY_CALENDAR
+        ORDER BY CAL_DATE
+    </select>
+
+    <!-- 공휴일 수정 -->
+    <update id="update" parameterType="com.kedu.ggirick_admin_backend.dto.system.HolidayCalendarDTO">
+        UPDATE HOLIDAY_CALENDAR
+        SET CAL_DATE = #{calDate},
+        IS_WORKDAY = #{isWorkday},
+        HOLIDAY_TYPE = #{holidayType},
+        DESCRIPTION = #{description}
+        WHERE ID = #{id}
+    </update>
+
+    <!-- 공휴일 삭제 -->
+    <delete id="delete" parameterType="long">
+        DELETE FROM HOLIDAY_CALENDAR
+        WHERE ID = #{id}
+    </delete>
+
 </mapper>

@@ -19,4 +19,30 @@
         SET organization_code = #{organizationCode}
         WHERE employee_id = #{id}
     </update>
+
+    <!-- 조직 등록 -->
+    <insert id="insertOrganization" parameterType="com.kedu.ggirick_admin_backend.dto.hr.OrganizationDTO">
+        INSERT INTO ORGANIZATION (CODE, NAME)
+        VALUES (#{code}, #{name})
+    </insert>
+
+    <!-- 조직 수정 -->
+    <update id="updateOrganizationNameByCode" parameterType="com.kedu.ggirick_admin_backend.dto.hr.OrganizationDTO">
+        UPDATE ORGANIZATION
+        SET NAME = #{name}
+        WHERE CODE = #{code}
+    </update>
+
+    <!-- 조직 삭제 -->
+    <delete id="deleteOrganizationByCode" parameterType="string">
+        DELETE FROM ORGANIZATION
+        WHERE CODE = #{code}
+    </delete>
+
+    <!-- 조직 코드 중복 확인 -->
+    <select id="checkDuplicateOrganizationCode" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM ORGANIZATION
+        WHERE UPPER(CODE) = UPPER(#{code})
+    </select>
 </mapper>

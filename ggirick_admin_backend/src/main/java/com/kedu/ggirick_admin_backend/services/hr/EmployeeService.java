@@ -14,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,14 +30,8 @@ public class EmployeeService {
     private final PasswordEncoder passwordEncoder;
 
     // ID만 가져오기 - 로그인 기능에 사용
-    public EmployeeDTO login(EmployeeDTO dto) {
-        EmployeeDTO employeeDTO = employeeDAO.getById(dto);
-
-        // ID, PW 비교
-        if (employeeDTO != null && passwordEncoder.matches(dto.getPw(), employeeDTO.getPw())) {
-            return employeeDTO;
-        }
-        return null;
+    public EmployeeDTO getById(EmployeeDTO dto) {
+        return employeeDAO.getById(dto);
     }
 
     // 직원 등록
@@ -182,6 +173,16 @@ public class EmployeeService {
 
         // 사번 조합: 10 + YY + 4자리 시퀀스 / %s: 문자열 자리, %04d : 4자리 정수(빈자리 0으로 채움)
         return String.format("10%s%04d", year, nextSeq);
+    }
+
+    // 이메일 중복 여부 확인
+    public boolean isEmailDuplicate(String email, String userId) {
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("email", email);
+        params.put("userId", userId);
+
+        return employeeDAO.isEmailDuplicate(params) > 0;
     }
 
 }

@@ -17,7 +17,6 @@ import java.util.Map;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final EmployeeService employeeService;
     private final JWTUtil jwt;
     private final AuthService authService;
 
@@ -25,7 +24,7 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> login(@RequestBody EmployeeDTO loginInfo) {
         System.out.println(loginInfo.getId());
         System.out.println(loginInfo.getPw());
-        EmployeeDTO loginDTO = employeeService.login(loginInfo);
+        EmployeeDTO loginDTO = authService.login(loginInfo);
         if (loginDTO != null) {
             // 인증 토큰 생성
             UserTokenDTO tokenInfo = authService.getTokenInfo(loginInfo.getId());

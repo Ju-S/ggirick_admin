@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="WorkPolicy">
+
+    <!-- 전체 정책 조회 -->
+    <select id="selectAll" resultType="com.kedu.ggirick_admin_backend.dto.system.WorkPolicyDTO">
+        SELECT
+        POLICY_ID AS policyId,
+        DEPARTMENT_ID AS departmentId,
+        ORGANIZATION_ID AS organizationId,
+        POLICY_NAME AS policyName,
+        WORK_START_TIME AS workStartTime,
+        WORK_END_TIME AS workEndTime,
+        EFFECTIVE_DATE AS effectiveDate,
+        CHANGED_AT AS changedAt,
+        CHANGED_BY AS changedBy,
+        REMARK
+        FROM WORK_POLICY
+        ORDER BY POLICY_ID
+    </select>
+
+    <!-- 정책 등록 -->
+    <insert id="insert" parameterType="com.kedu.ggirick_admin_backend.dto.system.WorkPolicyDTO">
+        INSERT INTO WORK_POLICY (
+        POLICY_ID,
+        DEPARTMENT_ID,
+        ORGANIZATION_ID,
+        POLICY_NAME,
+        WORK_START_TIME,
+        WORK_END_TIME,
+        EFFECTIVE_DATE,
+        CHANGED_AT,
+        CHANGED_BY,
+        REMARK
+        ) VALUES (
+        WORK_POLICY_SEQ.NEXTVAL,
+        #{departmentId},
+        #{organizationId},
+        UPPER(#{policyName}),
+        #{workStartTime},
+        #{workEndTime},
+        #{effectiveDate},
+        SYSDATE,
+        #{changedBy},
+        #{remark}
+        )
+    </insert>
+
+    <!-- 정책 수정 -->
+    <update id="update" parameterType="com.kedu.ggirick_admin_backend.dto.system.WorkPolicyDTO">
+        UPDATE WORK_POLICY
+        SET
+        DEPARTMENT_ID = #{departmentId},
+        ORGANIZATION_ID = #{organizationId},
+        POLICY_NAME = #{policyName},
+        WORK_START_TIME = #{workStartTime},
+        WORK_END_TIME = #{workEndTime},
+        EFFECTIVE_DATE = #{effectiveDate},
+        CHANGED_AT = SYSDATE,
+        CHANGED_BY = #{changedBy},
+        REMARK = #{remark}
+        WHERE POLICY_ID = #{policyId}
+    </update>
+
+    <!-- 정책 삭제 -->
+    <delete id="delete" parameterType="long">
+        DELETE FROM WORK_POLICY
+        WHERE POLICY_ID = #{policyId}
+    </delete>
+
+</mapper>

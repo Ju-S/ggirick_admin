@@ -1,13 +1,31 @@
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
 import {defineConfig} from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import flowbiteReact from "flowbite-react/plugin/vite";
+import svgr from "vite-plugin-svgr";
+import path, {dirname} from "path";
+import {fileURLToPath} from "url";
 
-// https://vite.dev/config/
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 export default defineConfig({
-    plugins: [react(), tailwindcss(), flowbiteReact()],
+    plugins: [
+        svgr(),
+        react(),
+        tailwindcss(),
+        flowbiteReact(),
+    ],
     server: {
-        host: true, // 또는 host: '0.0.0.0'
-        port: 5728
-    }
+        host: true,
+        port: 5728,
+    },
+    resolve: {
+        alias: {
+            "@": path.resolve(__dirname, "./src"),
+        },
+    },
+    define: {
+        global: "window",
+    },
 });
