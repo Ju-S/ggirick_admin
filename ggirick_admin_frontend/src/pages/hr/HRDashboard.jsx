@@ -165,7 +165,7 @@ export default function HRDashboard() {
 
             {/* 탭 */}
             <DashboardTabs
-                tabs={["직원 관리", "부서 관리", "조직 관리", "직급 관리", "조직도"]}
+                tabs={["직원 관리", "부서 관리", "조직 관리", "직급 관리"]}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
             />

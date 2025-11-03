@@ -32,12 +32,12 @@ public class VacationService {
         EmployeeDTO employeeDTO = employeeDAO.getEmployeeInfo(employeeId);
         if (employeeDTO == null) return;
 
-        // 1️⃣ 입사일 확인 로그
+        // 1. 입사일 확인 로그
         Date hireDate = employeeDTO.getHireDate();
-        System.out.println("✅ 입사일 기준 연차 계산 시작");
+        System.out.println("입사일 기준 연차 계산 시작");
         System.out.println("Hire Date: " + hireDate);
 
-        // 2️⃣ 근속연수 계산
+        // 2. 근속연수 계산
         LocalDate hireLocalDate = hireDate.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
@@ -46,7 +46,7 @@ public class VacationService {
         int years = Period.between(hireLocalDate, now).getYears();
         System.out.println("근속연수(years): " + years);
 
-        // ✅ 1년 미만: 0일 / 1년차: 15일 / 이후 2년에 1일씩 가산
+        // 1년 미만: 0일 / 1년차: 15일 / 이후 2년에 1일씩 가산
         int daysGranted;
         if (years < 1) {
             daysGranted = 0;
@@ -55,9 +55,9 @@ public class VacationService {
             daysGranted = Math.min(25, 15 + extra);
         }
 
-        System.out.println("🎯 계산된 연차일수(daysGranted): " + daysGranted);
+        System.out.println("계산된 연차일수(daysGranted): " + daysGranted);
 
-        // 3️⃣ DTO 세팅
+        // 3. DTO 세팅
         AnnualLeaveGrantDTO dto = new AnnualLeaveGrantDTO();
         dto.setEmployeeId(employeeId);
         dto.setDaysGranted(daysGranted);
@@ -65,10 +65,10 @@ public class VacationService {
         dto.setExpireDate(Date.from(Instant.now().plus(365, ChronoUnit.DAYS)));
         dto.setReason("입사일 기준 자동 부여");
 
-        // 4️⃣ 등록 실행
+        // 4. 등록 실행
         registerAnnualLeave(dto);
 
-        // 5️⃣ 잔여 휴가 갱신
+        // 5. 잔여 휴가 갱신
         employeeVacationDAO.updateRemaining(employeeId);
     }
 
