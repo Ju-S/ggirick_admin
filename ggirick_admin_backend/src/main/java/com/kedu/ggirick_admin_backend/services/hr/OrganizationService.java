@@ -17,4 +17,25 @@ public class OrganizationService {
     public List<OrganizationDTO> getAllOrganizations() {
         return organizationDAO.getAllOrganizations();
     }
+
+    // 조직 등록
+    public boolean insertOrganization(OrganizationDTO dto) {
+        // 조직 코드 중복 여부 확인
+        if (organizationDAO.checkDuplicateOrganizationCode(dto.getCode()) > 0) {
+            return false;
+        }
+        organizationDAO.insertOrganization(dto);
+        return true;
+    }
+
+    // 조직 수정
+    public void updateOrganizationNameByCode(OrganizationDTO dto) {
+        organizationDAO.updateOrganizationNameByCode(dto);
+    }
+
+    // 조직 삭제
+    public void deleteOrganizationByCode(String code) {
+        organizationDAO.deleteOrganizationByCode(code);
+    }
+
 }

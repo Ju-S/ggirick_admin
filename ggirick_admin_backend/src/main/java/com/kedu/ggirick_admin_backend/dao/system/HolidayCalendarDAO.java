@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,8 +19,24 @@ public class HolidayCalendarDAO {
         return count != null && count > 0;
     }
 
+    // 휴일 목록 전체 조회
+    public List<HolidayCalendarDTO> selectAll() {
+        return mybatis.selectList("HolidayCalendar.selectAll");
+    }
+
     // 휴일 입력
     public void insert(HolidayCalendarDTO dto) {
         mybatis.insert("HolidayCalendar.insert", dto);
     }
+
+    // 휴일 수정
+    public void update(HolidayCalendarDTO dto) {
+        mybatis.update("HolidayCalendar.update", dto);
+    }
+
+    // 휴일 삭제
+    public void delete(Long id) {
+        mybatis.delete("HolidayCalendar.delete", id);
+    }
+
 }

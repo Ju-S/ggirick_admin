@@ -3,6 +3,9 @@ package com.kedu.ggirick_admin_backend.controllers.hr;
 import com.kedu.ggirick_admin_backend.dto.hr.*;
 import com.kedu.ggirick_admin_backend.services.hr.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,5 +46,11 @@ public class HrMetaController {
     @GetMapping("/statuses")
     public List<EmploymentStatusCodeDTO> getAllEmploymentStatuses() {
         return employmentStatusService.getAllEmploymentStatuses();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Void> error(Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

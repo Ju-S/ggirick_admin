@@ -26,6 +26,7 @@ public class VacationService {
     private final EmployeeVacationDAO employeeVacationDAO;
     private final VacationLogDAO vacationLogDAO;
 
+    // 입사시 or 입사일 수정시 - 입사일 기준으로 연차 생성
     @Transactional
     public void registerAnnualLeaveByHireDate(String employeeId) {
         EmployeeDTO employeeDTO = employeeDAO.getEmployeeInfo(employeeId);
@@ -74,9 +75,10 @@ public class VacationService {
     // 입사일 기준 연차 자동 계산 및 등록
     // 입사 1년 미만: 월 개근 1일씩
     // 입사 1년 이상: 15일 + 근속 2년마다 1일 추가 ( 최대 25일 )
+    // 입사일 기준 잔여휴가 갱신
     @Transactional
     public boolean registerAnnualLeave(AnnualLeaveGrantDTO dto) {
-        // 1️⃣ 직원 정보 조회
+        // 1. 직원 정보 조회
         EmployeeDTO employeeDTO = employeeDAO.getEmployeeInfo(dto.getEmployeeId());
         if (employeeDTO == null || employeeDTO.getHireDate() == null) {
             throw new IllegalArgumentException("직원 정보가 존재하지 않습니다.");
@@ -87,13 +89,13 @@ public class VacationService {
                 .toLocalDate();
         LocalDate today = LocalDate.now();
 
-        // 2️⃣ 근속년수 계산
+        // 2. 근속년수 계산
         long years = ChronoUnit.YEARS.between(hireDate, today);
         long months = ChronoUnit.MONTHS.between(hireDate, today);
 
         int daysGranted = 0;
 
-        // 3️⃣ 연차 계산 로직
+        // 3. 연차 계산 로직
         if (years < 1) {
             // 입사 1년 미만 → 월 1일 (개근 기준)
             daysGranted = (int) Math.min(months, 11); // 최대 11개월
@@ -105,14 +107,14 @@ public class VacationService {
             }
         }
 
-        // 4️⃣ DTO 데이터 세팅
+        // 4. DTO 데이터 세팅
         dto.setGrantDate(new Date());
         dto.setExpireDate(java.sql.Date.valueOf(today.plusYears(1)));
         dto.setDaysGranted(daysGranted);
         dto.setDaysUsed(0);
         dto.setReason("입사일 기준 자동 부여");
 
-        // 5️⃣ DB 저장
+        // 5. DB 저장
         boolean inserted = vacationDAO.insertAnnualLeaveGrant(dto) > 0;
 
         if (inserted) {
@@ -126,7 +128,7 @@ public class VacationService {
     // 휴가 사용 기록 등록
     @Transactional
     public boolean registerVacationUsage(VacationUsageLogDTO dto) {
-        // 1️⃣ 휴가 일수 계산
+        // 1. 휴가 일수 계산
         LocalDate start = dto.getStartDate().toInstant()
                 .atZone(java.time.ZoneId.systemDefault())
                 .toLocalDate();
@@ -136,20 +138,20 @@ public class VacationService {
         int usedDays = (int) (ChronoUnit.DAYS.between(start, end) + 1);
         dto.setDaysUsed(usedDays);
 
-        // 2️⃣ 사용 로그 insert
+        // 2. 사용 로그 insert
         boolean inserted = vacationDAO.insertVacationUsageLog(dto) > 0;
 
-        // 3️⃣ 연차 부여 테이블 update
+        // 3. 연차 부여 테이블 update
         if (inserted && dto.getGrantId() != null) {
             int currentUsed = vacationDAO.getUsedDays(dto.getGrantId());
             int newUsed = currentUsed + usedDays;
             vacationDAO.updateUsedDays(dto.getGrantId(), newUsed);
         }
 
-        // 4️⃣ employee_vacation 동기화
+        // 4. employee_vacation 동기화
         employeeVacationDAO.updateRemaining(dto.getEmployeeId());
 
-        // 5️⃣ 기존 vacation_log에도 insert (UI/전자결재용)
+        // 5. 기존 vacation_log에도 insert (UI/전자결재용)
         VacationLogDTO log = new VacationLogDTO();
         log.setEmployeeId(dto.getEmployeeId());
         log.setApprovalId(dto.getApprovalId());

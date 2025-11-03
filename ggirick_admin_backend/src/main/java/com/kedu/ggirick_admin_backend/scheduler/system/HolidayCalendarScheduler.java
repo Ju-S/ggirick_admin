@@ -17,6 +17,6 @@ public class HolidayCalendarScheduler {
     @Scheduled(cron = "0 0 0 31 12 *", zone = "Asia/Seoul")
     public void run() {
         log.info("🚀 Holiday Calendar 자동등록 스케줄러 시작");
-        holidayCalendarService.generateNextYearCalendar();
+        holidayCalendarService.registerNextYearHolidays();
     }
 }

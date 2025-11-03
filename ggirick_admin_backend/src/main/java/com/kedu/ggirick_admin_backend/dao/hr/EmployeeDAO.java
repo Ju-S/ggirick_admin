@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -83,6 +85,11 @@ public class EmployeeDAO {
     // 올해 마지막 사번 조회
     public String getLastEmployeeId(String yearSuffix) {
         return mybatis.selectOne("Employee.getLastEmployeeId", yearSuffix);
+    }
+
+    // 이메일 중복 여부 확인
+    public int isEmailDuplicate(Map<String, Object> params) {
+        return mybatis.selectOne("Employee.isEmailDuplicate", params);
     }
 
 }

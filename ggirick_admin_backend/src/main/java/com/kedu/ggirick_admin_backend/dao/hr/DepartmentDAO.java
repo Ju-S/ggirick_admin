@@ -23,8 +23,28 @@ public class DepartmentDAO {
         return mybatis.selectOne("Department.findDepartmentName", code);
     }
 
-    // ID로 부서 수정
+    // employeeID로 부서 수정
     public void updateEmployeeDepartmentById(EmployeeDTO dto) {
         mybatis.update("Department.updateEmployeeDepartmentById", dto);
+    }
+
+    // 부서코드 중복 여부 확인
+    public int checkDuplicateDepartmentCode(String code) {
+        return mybatis.selectOne("checkDuplicateDepartmentCode", code);
+    }
+
+    // 부서 등록
+    public void insertDepartment(DepartmentDTO dto) {
+        mybatis.insert("Department.insertDepartment", dto);
+    }
+
+    // 부서 수정
+    public void updateDepNameByCode(DepartmentDTO dto) {
+        mybatis.update("Department.updateDepNameByCode", dto);
+    }
+
+    // 부서 삭제
+    public void deleteDepartmentByCode(String code) {
+        mybatis.delete("Department.deleteDepartmentByCode", code);
     }
 }

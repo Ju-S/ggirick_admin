@@ -6,6 +6,7 @@
     <!-- 직급 목록 조회 ( 메타 데이터 조회용 ) -->
     <select id="getAllJobs" resultType="com.kedu.ggirick_admin_backend.dto.hr.JobDTO">
         SELECT * FROM job
+        ORDER BY rank_order ASC
     </select>
 
     <!-- 직급 코드 -> 직급명 찾기 -->
@@ -25,8 +26,6 @@
         WHERE SUBSTR(id, 3, 2) = #{yearSuffix}
     </select>
 
-
-
     <!-- 선택한 직원 직급 수정 - 한명 정보 한꺼번에 수정시 사용 -->
     <update id="updateEmployeeJobById" parameterType="com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO">
         UPDATE employee_job
@@ -36,5 +35,45 @@
             , assigned_at = SYSDATE
         </if>
         WHERE employee_id = #{id}
+    </update>
+
+    <!-- 직급 등록 -->
+    <insert id="insertJob" parameterType="com.kedu.ggirick_admin_backend.dto.hr.JobDTO">
+        INSERT INTO JOB (CODE, NAME, RANK_ORDER)
+        VALUES (#{code}, #{name}, #{rankOrder})
+    </insert>
+
+    <!-- 직급 하나 수정 -->
+    <update id="updateJobNameByCode" parameterType="com.kedu.ggirick_admin_backend.dto.hr.JobDTO">
+        UPDATE JOB
+        SET
+        NAME = #{name},
+        RANK_ORDER = #{rankOrder}
+        WHERE CODE = #{code}
+    </update>
+
+    <!-- 직급 삭제 -->
+    <delete id="deleteJobByCode" parameterType="string">
+        DELETE FROM JOB
+        WHERE CODE = #{code}
+    </delete>
+
+    <!-- 직급 코드 중복 확인 -->
+    <select id="checkDuplicateJobCode" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM JOB
+        WHERE UPPER(CODE) = UPPER(#{code})
+    </select>
+
+    <!-- 새로운 직급 추가 후 전체 rankOrder 수정-->
+    <update id="insertJobAndUpdateRankOrder" parameterType="map">
+        MERGE INTO JOB j
+        USING (SELECT #{code} AS CODE, #{name} AS NAME, #{rankOrder} AS RANK_ORDER FROM dual) t
+        ON (j.CODE = t.CODE)
+        WHEN MATCHED THEN
+        UPDATE SET j.NAME = t.NAME, j.RANK_ORDER = t.RANK_ORDER
+        WHEN NOT MATCHED THEN
+        INSERT (CODE, NAME, RANK_ORDER)
+        VALUES (t.CODE, t.NAME, t.RANK_ORDER)
     </update>
 </mapper>

@@ -23,10 +23,6 @@ const useEmployeeStore = create((set) => ({
         statusName: "",
         authority: "", // user / manager / admin
     },
-
-    // 선택한 사원의 재직 이력 리스트
-    employmentHistory: [],
-
     // CRUD 메서드들
     // 전체 리스트 한 번에 세팅
     setEmployeeList: (list) => set({ employeeList: list }),
@@ -53,9 +49,6 @@ const useEmployeeStore = create((set) => ({
             },
         })),
 
-    // 재직 이력
-    setEmploymentHistory: (history) => set({ employmentHistory: history }),
-
     // 사용자 삭제
     deleteEmployee: () =>
         set({
@@ -77,6 +70,19 @@ const useEmployeeStore = create((set) => ({
                 authority: "", // user / manager / admin
             },
         }),
+
+    // 재직 상태 목록 (메타 데이터처럼 사용)
+    employmentStatuses: [],
+
+    // 전체 세팅 (App.js 초기 로드 시)
+    setEmploymentStatuses: (list) => set({ employmentStatuses: list }),
+
+    // 선택한 사원의 재직 이력 리스트
+    employmentHistory: [],
+
+    // 재직 이력
+    setEmploymentHistory: (history) => set({ employmentHistory: history }),
+
 }));
 
 export default useEmployeeStore;

@@ -22,6 +22,7 @@ export default function InputFormModal({ isOpen, onClose, onSubmit, title, field
             Object.keys(inputRefs.current).forEach((key) => {
                 if (inputRefs.current[key]) inputRefs.current[key].value = "";
             });
+
         }
     }, [isOpen]);
 

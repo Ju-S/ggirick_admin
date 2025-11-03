@@ -42,7 +42,7 @@ export default function SideNav() {
                     <li>
                         <button
                             type="button"
-                            onClick={() => navigate("/ggirick_wireframe")}
+                            onClick={() => navigate("/")}
                             className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75 "
                         >
                             <svg
@@ -86,7 +86,7 @@ export default function SideNav() {
                     <li>
                         <button
                             type="button"
-                            onClick={() => navigate("/task")}
+                            onClick={() => navigate("/systemdashboard")}
                             className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
                         >
                             <svg

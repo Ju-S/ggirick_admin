@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EmployeeWorkPolicy">
+    <select id="getEmployeeWithPolicyList" resultType="com.kedu.ggirick_admin_backend.dto.hr.EmployeeWorkPolicyDTO">
+        SELECT e.id AS employee_id,
+        e.name AS employee_name,
+        d.name AS department_name,
+        j.name AS job_name,
+        o.name AS organization_name,
+        wp.policy_id,
+        wp.policy_name,
+        wp.work_start_time,
+        wp.work_end_time,
+        wp.Remark,
+        ewp.reg_date,
+        ewp.change_date
+        FROM employee e
+        LEFT JOIN employee_work_policy ewp ON e.id = ewp.employee_id
+        LEFT JOIN work_policy wp ON ewp.policy_id = wp.policy_id
+        LEFT JOIN department d ON e.department_code = d.code
+        LEFT JOIN job j ON e.job_code = j.code
+        LEFT JOIN organization o ON e.organization_code = o.code
+        ORDER BY e.name
+    </select>
+</mapper>
