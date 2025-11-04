@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -156,5 +157,10 @@ public class HolidayCalendarService {
             log.error("공휴일 등록 중 오류 발생: {}", e.getMessage());
             return false;
         }
+    }
+
+    // 특정 날짜가 휴일인지 확인
+    public boolean isHoliday(Date date) {
+        return holidayCalendarDAO.isHoliday(date);
     }
 }

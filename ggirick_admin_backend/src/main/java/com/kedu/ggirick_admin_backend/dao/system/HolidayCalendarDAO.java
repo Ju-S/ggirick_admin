@@ -4,6 +4,8 @@ import com.kedu.ggirick_admin_backend.dto.system.HolidayCalendarDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,4 +41,9 @@ public class HolidayCalendarDAO {
         mybatis.delete("HolidayCalendar.delete", id);
     }
 
+    // 공휴일 여부 확인
+    public boolean isHoliday(Date date) {
+        Boolean result = mybatis.selectOne("HolidayCalendar.isHoliday", date);
+        return result != null && result;
+    }
 }
