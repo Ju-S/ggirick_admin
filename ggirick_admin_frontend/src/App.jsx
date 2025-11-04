@@ -4,10 +4,10 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 
 // 스토어
 import useAuthStore from "./store/auth/authStore.js";
-import useDepartmentStore from "@/store/hr/departmentStore.js";
-import useJobStore from "@/store/hr/jobStore.js";
-import useOrganizationStore from "@/store/hr/organizationStore.js";
-import useEmployeeStore from "@/store/hr/employeeStore.js";
+import useDepartmentStore from "./store/hr/departmentStore.js";
+import useJobStore from "./store/hr/jobStore.js";
+import useOrganizationStore from "./store/hr/organizationStore.js";
+import useEmployeeStore from "./store/hr/employeeStore.js";
 
 // 테마 + 공통 컴포넌트
 import {ThemeProvider} from "./context/ThemeContext.jsx";
@@ -21,15 +21,15 @@ import {
     getDepartmentsAPI,
     getJobsAPI,
     getOrganizationsAPI
-} from "./api/hr/employeeMetaAPI.js";
-import {getMyInfoAPI} from "@/api/hr/index.js";
+} from "./api/hr/index.js";
 
 // 페이지
 import {LoginPage} from "./pages/auth/LoginPage.jsx";
 import Error404Page from "./pages/commons/Error404Page.jsx";
 import HRDashboard from "./pages/hr/HRDashboard.jsx";
-import MainPage from "@/pages/commons/MainPage.jsx";
-import SystemDashboard from "@/pages/system/SystemDashboard.jsx";
+import MainPage from "./pages/commons/MainPage.jsx";
+import SystemDashboard from "./pages/system/SystemDashboard.jsx";
+import OrganizationPage from "./pages/organization/OrganizationPage.jsx";
 
 
 
@@ -40,7 +40,7 @@ export default function App() {
     const {setDepartments} = useDepartmentStore();
     const {setJobs} = useJobStore();
     const {setOrganizations} = useOrganizationStore();
-    const {setEmployee, setEmploymentStatuses} = useEmployeeStore();
+    const {setEmployee, setEmploymentStatuses, setMyInfo} = useEmployeeStore();
 
     // 오류 모달 상태 설정
     const [errorModalOpen, setErrorModalOpen] = useState(false);
@@ -53,6 +53,7 @@ export default function App() {
                 const res = await getMyInfoAPI();
                 if (res.status === 200 && res.data) {
                     setEmployee(res.data);
+                    setMyInfo(res.data);
                 }
             } catch (err) {
                 console.error("세션 복원 실패:", err);
@@ -148,6 +149,7 @@ export default function App() {
                                 <Route path="/" element={<MainPage/>}/>
                                 <Route path="/hrDashboard" element={<HRDashboard/>}/>
                                 <Route path="/systemDashboard" element={<SystemDashboard/>}/>
+                                <Route path="/organization" element={<OrganizationPage/>}/>
                                 <Route path="*" element={<Error404Page/>}/>
                             </Routes>
                         </>

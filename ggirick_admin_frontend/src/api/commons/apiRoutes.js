@@ -22,7 +22,7 @@ const apiRoutes = {
             method: "GET"
         }),
     },
-    employee: {
+    selectedEmployee: {
         /**
          * 사용자 등록 API<br>
          * POST /employee<br>
@@ -116,7 +116,9 @@ const apiRoutes = {
          * GET /hr-meta/statuses<br>
          * response: EmploymentStatusCodeDTO
          */
-        employmentStatuses: { url: `/hr-meta/statuses`, method: "GET" }
+        employmentStatuses: { url: `/hr-meta/statuses`, method: "GET" },
+
+        structure: {url: `/hr-meta/org-structure `, method: "GET"}
     },
     department: {
         /**
