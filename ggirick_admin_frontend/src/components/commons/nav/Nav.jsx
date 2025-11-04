@@ -1,16 +1,16 @@
 import Logo from '../../../assets/logo/ggirick-header.svg?react';
 import {useNavigate} from "react-router-dom";
+
 import React, {useEffect, useState} from "react";
 import useAuthStore from "../../../store/auth/authStore.js";
 import useEmployeeStore from "../../../store/hr/employeeStore.js";
-import {emailDuplCheckAPI, updateEmployeeAPI} from "@/api/hr/index.js";
+import {emailDuplCheckAPI, updateEmployeeAPI} from "../../../api/hr/index.js";
 import ThemeDropdown from "../sideNav/ThemeDropdown.jsx";
-
 
 export default function Nav({ toggleSidebar }) {
     const navigate = useNavigate();
     const logout = useAuthStore(state => state.logout);
-    const {employee, setEmployee} = useEmployeeStore();
+    const {myInfo, setMyInfo} = useEmployeeStore();
 
     // 모달 상태
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,19 +23,19 @@ export default function Nav({ toggleSidebar }) {
 
     useEffect(() => {
         setEditData({
-            id: employee?.id || "",
-            name: employee?.name || "",
-            phone: employee?.phone || "",
-            extension: employee?.extension || "",
-            emailId: employee?.email?.split("@")[0] || "",
-            email: employee?.email || "",
+            id: myInfo?.id || "",
+            name: myInfo?.name || "",
+            phone: myInfo?.phone || "",
+            extension: myInfo?.extension || "",
+            emailId: myInfo?.email?.split("@")[0] || "",
+            email: myInfo?.email || "",
         });
-        setPreviewUrl(employee?.profileUrl || "");
+        setPreviewUrl(myInfo?.profileUrl || "");
     }, [isModalOpen, isEditMode]);
 
     useEffect(() => {
-        setPreviewUrl(employee?.profileUrl || "");
-    }, [employee]);
+        setPreviewUrl(myInfo?.profileUrl || "");
+    }, [myInfo]);
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -60,6 +60,9 @@ export default function Nav({ toggleSidebar }) {
 
             if (isDuplicate) return;
 
+            console.log(profileFile);
+            console.log(editData);
+
             const formData = new FormData();
             formData.append("profileImg", profileFile || new Blob());
             formData.append("employeeInfo", new Blob([JSON.stringify(editData)], {type: "application/json"}));
@@ -67,7 +70,7 @@ export default function Nav({ toggleSidebar }) {
             const resp = await updateEmployeeAPI(formData);
 
             if (resp.status === 200) {
-                setEmployee(resp.data);
+                setMyInfo(resp.data);
                 setIsEditMode(false);
                 setIsModalOpen(false);
             } else {
@@ -98,7 +101,6 @@ export default function Nav({ toggleSidebar }) {
     };
 
     return (
-
         <>
             <nav className="fixed top-0 right-0 left-0 z-50 border-b border-base-200 bg-base-100 px-4 py-2.5">
                 <div className="flex flex-wrap items-center justify-between">
@@ -130,37 +132,21 @@ export default function Nav({ toggleSidebar }) {
                         <div className="dropdown dropdown-end">
                             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                                 <div className="w-10 rounded-full">
-                                    {previewUrl ? (
-                                        <img
-                                            alt="user avatar"
-                                            src={previewUrl}
-                                            className="w-10 h-10 object-cover rounded-full"
-                                            onError={(e) =>
-                                                (e.currentTarget.src =
-                                                    "https://ui-avatars.com/api/?name=Unknown&background=8b5cf6&color=fff&size=128")
-                                            }
-                                        />
-                                    ) : (
-                                        <img
-                                            alt="default avatar"
-                                            src="https://ui-avatars.com/api/?name=Unknown&background=8b5cf6&color=fff&size=128"
-                                            className="w-10 h-10 object-cover rounded-full"
-                                        />
-                                    )}
+                                    <img alt="user avatar" src={previewUrl}/>
                                 </div>
                             </label>
                             <ul tabIndex={0}
                                 className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-48">
                                 <li className="px-2 py-2 pointer-events-none bg-transparent hover:bg-transparent">
                                     <div>
-                                        <span className="font-semibold">{employee?.name || "이름 없음"}</span>
+                                        <span className="font-semibold">{myInfo?.name || "이름 없음"}</span>
                                         <span className="text-xs text-base-content/50 block">
-                                            {employee?.departmentName} / {employee?.jobName}
+                                            {myInfo?.departmentName} / {myInfo?.jobName}
                                         </span>
                                     </div>
                                     <div>
                                         <span className="text-xs text-base-content/50 block">
-                                            {employee?.email + "@ggirick.site" || "이메일 없음"}
+                                            {myInfo?.email + "@ggirick.site" || "이메일 없음"}
                                         </span>
                                     </div>
                                 </li>
@@ -241,15 +227,15 @@ export default function Nav({ toggleSidebar }) {
                         ) : (
                             <div className="space-y-2">
                                 <div className="flex items-center gap-4 mb-2">
-                                    <img src={employee?.profileUrl} className="w-16 h-16 rounded-full object-cover"
+                                    <img src={myInfo?.profileUrl} className="w-16 h-16 rounded-full object-cover"
                                          alt="profile"/>
                                     <div>
-                                        <p><strong>이름:</strong> {employee?.name}</p>
-                                        <p><strong>전화번호:</strong> {employee?.phone}</p>
-                                        <p><strong>내선:</strong> {employee?.extension}</p>
-                                        <p><strong>이메일:</strong> {employee?.email + "@ggirick.site"}</p>
+                                        <p><strong>이름:</strong> {myInfo?.name}</p>
+                                        <p><strong>전화번호:</strong> {myInfo?.phone}</p>
+                                        <p><strong>내선:</strong> {myInfo?.extension}</p>
+                                        <p><strong>이메일:</strong> {myInfo?.email + "@ggirick.site"}</p>
                                         <p>
-                                            <strong>부서/직급:</strong> {employee?.departmentName} / {employee?.jobName}
+                                            <strong>부서/직급:</strong> {myInfo?.departmentName} / {myInfo?.jobName}
                                         </p>
                                     </div>
                                 </div>

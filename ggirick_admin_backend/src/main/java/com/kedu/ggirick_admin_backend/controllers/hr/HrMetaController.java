@@ -48,6 +48,11 @@ public class HrMetaController {
         return employmentStatusService.getAllEmploymentStatuses();
     }
 
+    @GetMapping("/org-structure")
+    public ResponseEntity<List<OrganizationWithDepartmentsDTO>> getOrgStructure() {
+        return ResponseEntity.ok( organizationService.getOrgStructure());
+    }
+
     @ExceptionHandler
     public ResponseEntity<Void> error(Exception e) {
         e.printStackTrace();

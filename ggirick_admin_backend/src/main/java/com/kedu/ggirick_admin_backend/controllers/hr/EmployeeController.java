@@ -78,9 +78,9 @@ public class EmployeeController {
     // 이메일 중복 체크
     @GetMapping("/duplcheck")
     public ResponseEntity<String> checkEmailDuplication(@RequestParam String email,
-                                                        @AuthenticationPrincipal UserTokenDTO userInfo) {
+                                                        @RequestParam String employeeId) {
         String errorMsg = null;
-        if (employeeService.isEmailDuplicate(email, userInfo.getId())) {
+        if (employeeService.isEmailDuplicate(employeeId, email)) {
             errorMsg = "존재하는 이메일입니다.";
         }
 

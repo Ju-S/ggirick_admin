@@ -12,3 +12,5 @@ export const getOrganizationsAPI = () => api(apiRoutes.hrMeta.organizations);
 
 // 재직 상태 목록 조회
 export const getAllEmploymentStatusesAPI = () => api(apiRoutes.hrMeta.employmentStatuses);
+
+export const getHrMetaStructureAPI = () =>api(apiRoutes.hrMeta.structure);

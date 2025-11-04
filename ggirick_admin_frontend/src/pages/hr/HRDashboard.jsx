@@ -38,14 +38,14 @@ export default function HRDashboard() {
     const [pendingData, setPendingData] = useState(null);
     const [resultData, setResultData] = useState(null);
 
-    // ✅ 스토어
+    // 스토어
     const { departments, setDepartments } = useDepartmentStore();
     const { jobs, setJobs } = useJobStore();
     const { organizations, setOrganizations } = useOrganizationStore();
     const { employmentStatuses, setEmploymentStatuses } = useEmploymentStatusStore();
     const { employeeList, setEmployeeList, setEmployee } = useEmployeeStore();
 
-    // ✅ 직원 목록 자동 로드
+    // 직원 목록 자동 로드
     useEffect(() => {
         employeeAllListAPI()
             .then((res) => {
@@ -54,7 +54,7 @@ export default function HRDashboard() {
             .catch((err) => console.error("직원 목록 조회 실패:", err));
     }, []);
 
-    // ✅ 부서 / 직급 / 조직 / 재직 상태 목록 초기 로드
+    // 부서 / 직급 / 조직 / 재직 상태 목록 초기 로드
     useEffect(() => {
         if (!departments.length)
             getDepartmentsAPI().then((res) => setDepartments(res.data || []));
@@ -66,7 +66,7 @@ export default function HRDashboard() {
             getAllEmploymentStatusesAPI().then((res) => setEmploymentStatuses(res.data || []));
     }, []);
 
-    // ✅ 행 클릭 시 수정 모달 열기
+    // 행 클릭 시 수정 모달 열기
     const handleRowClick = async (employee) => {
         if (!departments.length)
             await getDepartmentsAPI().then((res) => setDepartments(res.data || []));
@@ -81,14 +81,14 @@ export default function HRDashboard() {
         setIsEditModalOpen(true);
     };
 
-    // ✅ 직원 추가 - 1단계
+    // 직원 추가 - 1단계
     const handleEmployeeInsert = (data, resetForm) => {
         setPendingData(data);
         setConfirmModalOpen(true);
         handleEmployeeInsert.resetForm = resetForm;
     };
 
-    // ✅ 직원 추가 - 2단계
+    // 직원 추가 - 2단계
     const handleConfirmInsert = () => {
         insertAPI(pendingData)
             .then((res) => {
@@ -112,7 +112,7 @@ export default function HRDashboard() {
             });
     };
 
-    // ✅ 직원 등록 필드 구성
+    // 직원 등록 필드 구성
     const employeeFields = useMemo(
         () => [
             { name: "name", label: "이름", type: "text", required: true },
@@ -165,7 +165,7 @@ export default function HRDashboard() {
 
             {/* 탭 */}
             <DashboardTabs
-                tabs={["직원 관리", "부서 관리", "조직 관리", "직급 관리", "조직도"]}
+                tabs={["직원 관리", "부서 관리", "조직 관리", "직급 관리"]}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
             />
@@ -227,7 +227,7 @@ export default function HRDashboard() {
             {activeTab === "조직 관리" && <OrgManage />}
             {activeTab === "직급 관리" && <JobManage />}
 
-            {/* ✅ 직원 수정 모달 */}
+            {/* 직원 수정 모달 */}
             <EditEmployeeModal
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}

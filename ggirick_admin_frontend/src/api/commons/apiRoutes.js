@@ -22,7 +22,7 @@ const apiRoutes = {
             method: "GET"
         }),
     },
-    employee: {
+    selectedEmployee: {
         /**
          * 사용자 등록 API<br>
          * POST /employee<br>
@@ -84,8 +84,8 @@ const apiRoutes = {
          * 이메일용 아이디 중복확인 API<br>
          * GET /employee/duplcheck?email={email}<br>
          */
-        duplcheck: (email) => ({
-            url: `/employee/duplcheck?email=${email}`,
+        duplcheck: (employeeId, email) => ({
+            url: `/employee/duplcheck?employeeId=${employeeId}&email=${email}`,
             method: "GET",
         }),
     },
@@ -116,7 +116,9 @@ const apiRoutes = {
          * GET /hr-meta/statuses<br>
          * response: EmploymentStatusCodeDTO
          */
-        employmentStatuses: { url: `/hr-meta/statuses`, method: "GET" }
+        employmentStatuses: { url: `/hr-meta/statuses`, method: "GET" },
+
+        structure: {url: `/hr-meta/org-structure `, method: "GET"}
     },
     department: {
         /**

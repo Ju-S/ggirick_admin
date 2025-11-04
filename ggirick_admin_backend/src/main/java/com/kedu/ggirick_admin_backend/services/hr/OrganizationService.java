@@ -2,6 +2,7 @@ package com.kedu.ggirick_admin_backend.services.hr;
 
 import com.kedu.ggirick_admin_backend.dao.hr.OrganizationDAO;
 import com.kedu.ggirick_admin_backend.dto.hr.OrganizationDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.OrganizationWithDepartmentsDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,4 +39,7 @@ public class OrganizationService {
         organizationDAO.deleteOrganizationByCode(code);
     }
 
+    public List<OrganizationWithDepartmentsDTO> getOrgStructure() {
+        return organizationDAO.findOrganizationStructure();
+    }
 }

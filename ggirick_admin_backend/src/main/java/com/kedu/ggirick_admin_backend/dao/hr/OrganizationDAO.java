@@ -2,6 +2,7 @@ package com.kedu.ggirick_admin_backend.dao.hr;
 
 import com.kedu.ggirick_admin_backend.dto.hr.OrganizationDTO;
 import com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO;
+import com.kedu.ggirick_admin_backend.dto.hr.OrganizationWithDepartmentsDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -46,5 +47,10 @@ public class OrganizationDAO {
     // 조직 코드 중복 확인
     public int checkDuplicateOrganizationCode(String code) {
         return mybatis.selectOne("Organization.checkDuplicateOrganizationCode", code);
+    }
+
+    // 전체 조직도 가져오기
+    public List<OrganizationWithDepartmentsDTO> findOrganizationStructure() {
+        return mybatis.selectList("HrMetadata.findOrganizationStructure");
     }
 }
