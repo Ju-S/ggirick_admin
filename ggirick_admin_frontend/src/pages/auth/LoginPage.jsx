@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import useEmployeeStore from "../../store/hr/employeeStore.js";
-import useAuthStore from "../../store/auth/authStore.js";
+import {useNavigate} from "react-router-dom";
 
 import Logo from '../../assets/logo/ggirick-header.svg?react';
 
-import {loginAPI} from "@/api/auth/authAPI.js";
+import useEmployeeStore from "../../store/hr/employeeStore.js";
+import useAuthStore from "../../store/auth/authStore.js";
+
 import LoginInputForm from "../../components/auth/LoginInputForm.jsx";
-import {getMyInfoAPI} from "@/api/hr/index.js";
-import {useNavigate} from "react-router-dom";
+
+import {loginAPI} from "../../api/auth/authAPI.js";
+import {getMyInfoAPI} from "../../api/hr/index.js";
 
 export function LoginPage() {
     // input 입력 값 저장할 상태변수
@@ -20,7 +22,7 @@ export function LoginPage() {
     const navigate = useNavigate();
 
     // 전역 상태변수 불러오기
-    const setEmployee = useEmployeeStore((state) => state.setEmployee);
+    const setMyInfo = useEmployeeStore((state) => state.setMyInfo);
     const login = useAuthStore(state => state.login);
 
 
@@ -40,7 +42,7 @@ export function LoginPage() {
             // 본인 정보 조회
             const meResp = await getMyInfoAPI();
             if (meResp.status === 200 && meResp.data) {
-                setEmployee(meResp.data); // 스토어에 저장
+                setMyInfo(meResp.data); // 스토어에 저장
                 console.log("로그인 성공 / 사용자 정보:", meResp.data);
                 navigate("/");
             } else {

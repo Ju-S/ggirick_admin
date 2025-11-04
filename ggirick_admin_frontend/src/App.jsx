@@ -19,7 +19,7 @@ import AlertModal from "./components/commons/modals/AlertModal.jsx";
 import {
     getAllEmploymentStatusesAPI,
     getDepartmentsAPI,
-    getJobsAPI,
+    getJobsAPI, getMyInfoAPI,
     getOrganizationsAPI
 } from "./api/hr/index.js";
 
@@ -40,7 +40,7 @@ export default function App() {
     const {setDepartments} = useDepartmentStore();
     const {setJobs} = useJobStore();
     const {setOrganizations} = useOrganizationStore();
-    const {setEmployee, setEmploymentStatuses, setMyInfo} = useEmployeeStore();
+    const {setEmploymentStatuses, setMyInfo} = useEmployeeStore();
 
     // 오류 모달 상태 설정
     const [errorModalOpen, setErrorModalOpen] = useState(false);
@@ -52,7 +52,6 @@ export default function App() {
             try {
                 const res = await getMyInfoAPI();
                 if (res.status === 200 && res.data) {
-                    setEmployee(res.data);
                     setMyInfo(res.data);
                 }
             } catch (err) {

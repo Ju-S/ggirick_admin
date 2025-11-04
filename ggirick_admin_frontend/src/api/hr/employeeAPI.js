@@ -24,4 +24,4 @@ export const employeeAllListAPI = () => api(apiRoutes.selectedEmployee.list);
 export const employeeDetailAPI = (id) => api(apiRoutes.selectedEmployee.detail(id));
 
 // 이메일 중복 확인
-export const emailDuplCheckAPI = (email) => api(apiRoutes.selectedEmployee.duplcheck(email));
+export const emailDuplCheckAPI = (employeeId, email) => api(apiRoutes.selectedEmployee.duplcheck(employeeId, email));

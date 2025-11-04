@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import useEmployeeStore from "../../../store/hr/employeeStore.js";
 import CommonSelect from "../CommonSelect.jsx";
 import useDepartmentStore from "../../../store/hr/departmentStore.js";
@@ -17,19 +17,36 @@ export default function EditEmployeeModal({ isOpen, onClose }) {
 
     const [emailCheckResult, setEmailCheckResult] = useState(null);
 
+    // 선택한 직원이 달라질 때마다 이메일 체크 초기화
+    useEffect(() => {
+        setEmailCheckResult(null);
+    }, [selectedEmployee]);
+
     // 이메일 중복확인
     const checkEmailDuplicate = async () => {
-        if (!selectedEmployee.email) return alert("이메일을 입력해주세요.");
+        if (!selectedEmployee.email) {
+            alert("이메일을 입력해주세요.");
+            return;
+        }
+
         try {
-            const res = await emailDuplCheckAPI(selectedEmployee.email);
-            const data = await res.json();
-            if (data.exists) setEmailCheckResult("이미 사용 중인 이메일입니다 ❌");
-            else setEmailCheckResult("사용 가능한 이메일입니다 ✅");
+            const res = await emailDuplCheckAPI(selectedEmployee.id, selectedEmployee.email);
+
+            // 정상 (200 OK)
+            if (res.status === 200) {
+                setEmailCheckResult("사용 가능한 이메일입니다 ✅");
+            }
         } catch (err) {
-            console.error(err);
-            setEmailCheckResult("중복확인 중 오류 발생 ❗");
+            if (err.response?.status === 409) {
+                // 중복된 이메일 (409 CONFLICT)
+                setEmailCheckResult("이미 사용 중인 이메일입니다 ❌");
+            } else {
+                console.error(err);
+                setEmailCheckResult("중복확인 중 오류 발생 ❗");
+            }
         }
     };
+
 
     // 수정 저장 요청
     const handleUpdate = async () => {
@@ -44,7 +61,7 @@ export default function EditEmployeeModal({ isOpen, onClose }) {
                 // 다시 직원 목록 불러오기
                 const refreshed = await employeeAllListAPI();
                 setEmployeeList(refreshed.data);
-                onClose();
+                handleClose();
             } else {
                 alert("수정 중 오류가 발생했습니다 ❌");
             }
@@ -52,6 +69,12 @@ export default function EditEmployeeModal({ isOpen, onClose }) {
             console.error(err);
             alert("수정 요청 중 오류 발생 ❌");
         }
+    };
+
+    // 닫기 버튼 클릭시
+    const handleClose = () => {
+        setEmailCheckResult(null); // 중복확인 결과 초기화
+        onClose(); // 부모에서 모달 닫는 로직 호출
     };
 
     if (!isOpen || !selectedEmployee) return null;
@@ -174,7 +197,7 @@ export default function EditEmployeeModal({ isOpen, onClose }) {
 
                 <div className="modal-action">
                     <button className="btn btn-primary" onClick={handleUpdate}>저장</button>
-                    <button className="btn" onClick={onClose}>닫기</button>
+                    <button className="btn" onClick={handleClose}>닫기</button>
                 </div>
             </div>
         </dialog>
