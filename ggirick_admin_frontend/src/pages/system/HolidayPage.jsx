@@ -45,7 +45,8 @@ export default function HolidayPage() {
             ],
             required: true,
         },
-        { name: "description", label: "설명", type: "textarea" },
+        // 설명란도 필수 입력하게 설정
+        { name: "description", label: "설명", type: "textarea", required: true },
     ];
 
     // 수정용 필드 (holidayType 고정)
@@ -77,7 +78,19 @@ export default function HolidayPage() {
             resetForm();
             setAlertInfo({ title: "등록 완료", message: "휴일이 등록되었습니다.", type: "info" });
         } catch (err) {
-            setAlertInfo({ title: "등록 실패", message: "휴일 등록 중 오류가 발생했습니다.", type: "error" });
+            if (err.response?.status === 409) {
+                setAlertInfo({
+                    title: "중복 날짜",
+                    message: "이미 등록된 날짜입니다.",
+                    type: "warn",
+                });
+            } else {
+                setAlertInfo({
+                    title: "등록 실패",
+                    message: "휴일 등록 중 오류가 발생했습니다.",
+                    type: "error",
+                });
+            }
         } finally {
             setIsAlertOpen(true);
         }

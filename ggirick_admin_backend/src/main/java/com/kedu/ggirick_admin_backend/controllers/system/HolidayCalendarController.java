@@ -39,9 +39,15 @@ public class HolidayCalendarController {
     // 등록
     @PostMapping
     public ResponseEntity<String> insert(@RequestBody HolidayCalendarDTO dto) {
-        holidayCalendarService.insert(dto);
-        return ResponseEntity.ok("공휴일이 등록되었습니다.");
+        boolean result = holidayCalendarService.insert(dto);
+
+        if (result) {
+            return ResponseEntity.ok("공휴일이 등록되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409 중복
+        }
     }
+
 
     // 수정
     @PutMapping

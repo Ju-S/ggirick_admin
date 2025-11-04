@@ -32,12 +32,28 @@ export default function InputFormModal({ isOpen, onClose, onSubmit, title, field
     today.setHours(0, 0, 0, 0);
 
     const handleChange = (name, value) => {
+        // code 필드일 때만 입력 제어
+        if (name === "code") {
+            const label = fields.find((f) => f.name === name)?.label || "";
+
+            if (label.includes("직급") || label.includes("Job") || label.includes("JOB")) {
+                // 직급 코드: 영어만, 대문자로
+                value = value.replace(/[^a-zA-Z]/g, "").toUpperCase();
+            } else {
+                // 나머지 (조직/부서): 영어+숫자 허용, 대문자
+                value = value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+            }
+        }
+
         setFormData((prev) => ({ ...prev, [name]: value }));
+
+        // 에러 초기화
         if (name === errorField) {
             setErrorField(null);
             setErrorMsg("");
         }
     };
+
 
     // 유효성 검사
     const handleConfirm = () => {
@@ -149,7 +165,7 @@ export default function InputFormModal({ isOpen, onClose, onSubmit, title, field
                             );
                         }
 
-                        // ✅ 날짜 선택 (시간 제거: date만)
+                        // 날짜 선택 (시간 제거: date만)
                         if (field.type === "date") {
                             return (
                                 <div key={field.name} className="relative">
@@ -193,7 +209,7 @@ export default function InputFormModal({ isOpen, onClose, onSubmit, title, field
                             );
                         }
 
-                        // ✅ 연봉 입력칸 (만원 단위 표시)
+                        // 연봉 입력칸 (만원 단위 표시)
                         if (field.name === "salary") {
                             return (
                                 <div key={field.name} className="relative">
@@ -215,7 +231,7 @@ export default function InputFormModal({ isOpen, onClose, onSubmit, title, field
                             );
                         }
 
-                        // ✅ 일반 input
+                        // 일반 input
                         return (
                             <input
                                 key={field.name}

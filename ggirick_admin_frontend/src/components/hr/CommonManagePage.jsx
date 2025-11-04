@@ -1,8 +1,8 @@
 // src/components/hr/CommonManagePage.jsx
 import { useState } from "react";
-import InputFormModal from "@/components/commons/modals/InputFormModal.jsx";
-import ConfirmModal from "@/components/commons/modals/ConfirmModal.jsx";
-import AlertModal from "@/components/commons/modals/AlertModal.jsx";
+import InputFormModal from "../../components/commons/modals/InputFormModal.jsx";
+import ConfirmModal from "../../components/commons/modals/ConfirmModal.jsx";
+import AlertModal from "../../components/commons/modals/AlertModal.jsx";
 
 export default function CommonManagePage({
                                              entityName, // "부서" / "조직" / "직급"
@@ -25,6 +25,7 @@ export default function CommonManagePage({
 
     // 등록 (기본 모달에서만 사용)
     const handleCreate = async (data, resetForm) => {
+        // 입력값 정리 (공백 제거 + 대문자 변환)
         const payload = {
             code: (data.code || "").trim().toUpperCase(),
             name: (data.name || "").trim(),
@@ -35,6 +36,7 @@ export default function CommonManagePage({
             payload.rankOrder = dataList.length + 1;
         }
 
+        // 필수 입력값 체크
         if (!payload.code || !payload.name) {
             setAlertInfo({
                 title: "입력 오류",
@@ -45,6 +47,36 @@ export default function CommonManagePage({
             return;
         }
 
+        // 엔터티별 코드 형식 제한
+        let codeRegex;
+        let formatHint = "";
+
+        if (entityName === "조직") {
+            codeRegex = /^ORG\d{3}$/; // ORG + 숫자 3자리
+            formatHint = '조직 코드는 "ORG001" 형태여야 합니다.';
+        } else if (entityName === "부서") {
+            codeRegex = /^DEP\d{3}$/; // DEP + 숫자 3자리
+            formatHint = '부서 코드는 "DEP001" 형태여야 합니다.';
+        } else if (entityName === "직급") {
+            codeRegex = /^[A-Z]+$/; // 영어만
+            formatHint = '직급 코드는 영어 대문자만 입력 가능합니다. (예: CEO, DEVLEAD)';
+        } else {
+            // 기본적으로 영문+숫자 허용
+            codeRegex = /^[A-Z0-9]+$/;
+            formatHint = '코드는 영어 대문자와 숫자만 입력할 수 있습니다.';
+        }
+
+        if (!codeRegex.test(payload.code)) {
+            setAlertInfo({
+                title: "입력 오류",
+                message: formatHint,
+                type: "warn",
+            });
+            setIsAlertOpen(true);
+            return;
+        }
+
+        // 등록 처리
         try {
             const res = await api.insert(payload);
             if (res?.status === 200) {
@@ -56,11 +88,21 @@ export default function CommonManagePage({
                 });
             }
         } catch (err) {
-            setAlertInfo({
-                title: `${entityName} 등록 실패`,
-                message: `${entityName} 등록 중 오류가 발생했습니다.`,
-                type: "error",
-            });
+            // 409 Conflict → 중복 코드
+            if (err.response?.status === 409) {
+                setAlertInfo({
+                    title: "중복 코드",
+                    message: `${entityName} 코드 "${payload.code}"는 이미 존재합니다.`,
+                    type: "warn",
+                });
+            } else {
+                // 그 외 서버 오류
+                setAlertInfo({
+                    title: `${entityName} 등록 실패`,
+                    message: `${entityName} 등록 중 오류가 발생했습니다.`,
+                    type: "error",
+                });
+            }
         } finally {
             setIsCreateModalOpen(false);
             resetForm();
