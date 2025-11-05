@@ -52,44 +52,34 @@ public class EmployeeService {
         dto.setProfileUrl("https://ui-avatars.com/api/?name=" + encodedName + "&background=" + randomColor + "&color=fff&size=128");
 
         // 직원 등록 관련 테이블 insert - 부서, 조직, 권한, 재직상태, 비밀번호 초기화 상태, 근무 계획 입력
-        Boolean isInsertEmployee = employeeDAO.insertEmployee(dto) > 0;
-        Boolean isInsertEmployeeDepartment = employeeDAO.insertEmployeeDepartment(dto) > 0;
-        Boolean isInsertEmploymentStatus = employeeDAO.insertEmploymentStatus(dto.getId()) > 0;
-        Boolean isInsertEmployeeJob = employeeDAO.insertEmployeeJob(dto) > 0;
-        Boolean isInsertEmployeeOrganization = employeeDAO.insertEmployeeOrganization(dto) > 0;
-        Boolean isInsertEmployeeAuthority = employeeDAO.insertEmployeeAuthority(dto) > 0;
-        Boolean isInsertPwReset = employeeDAO.insertPasswordReset(dto.getId()) > 0;
-        Boolean isInsertWorkPlan = workPlanService.generateInitialPlans(dto.getId()) > 0;
+        employeeDAO.insertEmployee(dto);
+        employeeDAO.insertEmployeeDepartment(dto);
+        employeeDAO.insertEmploymentStatus(dto.getId());
+        employeeDAO.insertEmployeeJob(dto);
+        employeeDAO.insertEmployeeOrganization(dto);
+        employeeDAO.insertEmployeeAuthority(dto);
+        employeeDAO.insertPasswordReset(dto.getId());
+        workPlanService.generateInitialPlans(dto.getId());
 
-        // 전부 입력 성공시
-        if (isInsertEmployee && isInsertEmployeeDepartment
-                && isInsertEmploymentStatus && isInsertEmployeeJob
-                && isInsertEmployeeOrganization && isInsertEmployeeAuthority
-                && isInsertPwReset && isInsertWorkPlan) {
+        // 신규 직원 연차 자동 생성
+        vacationService.registerAnnualLeaveByHireDate(dto.getId());
 
-            // 신규 직원 연차 자동 생성
-            vacationService.registerAnnualLeaveByHireDate(dto.getId());
+        // 새로 등록된 직원 정보 조회 - 안내용
+        EmployeeRegisterResultDTO newDTO = new EmployeeRegisterResultDTO();
+        newDTO.setEmpId(employeeId); // 사원번호
+        newDTO.setName(dto.getName()); // 이름
 
-            // 새로 등록된 직원 정보 조회 - 안내용
-            EmployeeRegisterResultDTO newDTO = new EmployeeRegisterResultDTO();
-            newDTO.setEmpId(employeeId); // 사원번호
-            newDTO.setName(dto.getName()); // 이름
+        // departmentCode, jobCode, organizationCode → 이름으로 변환 (DAO 통해 조회)
+        String deptName = departmentDAO.findDepartmentName(dto.getDepartmentCode());
+        String jobName = jobDAO.findJobName(dto.getJobCode());
+        String orgName = organizationDAO.findOrganizationName(dto.getOrganizationCode());
 
-            // departmentCode, jobCode, organizationCode → 이름으로 변환 (DAO 통해 조회)
-            String deptName = departmentDAO.findDepartmentName(dto.getDepartmentCode());
-            String jobName = jobDAO.findJobName(dto.getJobCode());
-            String orgName = organizationDAO.findOrganizationName(dto.getOrganizationCode());
+        newDTO.setDepartmentName(deptName); // 부서명
+        newDTO.setJobName(jobName); // 직급명
+        newDTO.setOrganizationName(orgName); // 조직명
+        newDTO.setTempPw(tempPw); // 초기비밀번호
 
-            newDTO.setDepartmentName(deptName); // 부서명
-            newDTO.setJobName(jobName); // 직급명
-            newDTO.setOrganizationName(orgName); // 조직명
-            newDTO.setTempPw(tempPw); // 초기비밀번호
-
-            return newDTO;
-        } else {
-            System.err.println("❌ 직원 등록 실패");
-            return null;
-        }
+        return newDTO;
     }
 
     // 사원 삭제
