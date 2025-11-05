@@ -6,6 +6,7 @@ import com.kedu.ggirick_admin_backend.dao.hr.VacationDAO;
 import com.kedu.ggirick_admin_backend.dao.hr.VacationLogDAO;
 import com.kedu.ggirick_admin_backend.dto.hr.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class VacationService {
@@ -30,46 +32,27 @@ public class VacationService {
     @Transactional
     public void registerAnnualLeaveByHireDate(String employeeId) {
         EmployeeDTO employeeDTO = employeeDAO.getEmployeeInfo(employeeId);
-        if (employeeDTO == null) return;
-
-        // 1. 입사일 확인 로그
-        Date hireDate = employeeDTO.getHireDate();
-        System.out.println("입사일 기준 연차 계산 시작");
-        System.out.println("Hire Date: " + hireDate);
-
-        // 2. 근속연수 계산
-        LocalDate hireLocalDate = hireDate.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-        LocalDate now = LocalDate.now();
-
-        int years = Period.between(hireLocalDate, now).getYears();
-        System.out.println("근속연수(years): " + years);
-
-        // 1년 미만: 0일 / 1년차: 15일 / 이후 2년에 1일씩 가산
-        int daysGranted;
-        if (years < 1) {
-            daysGranted = 0;
-        } else {
-            int extra = (years - 1) / 2;  // 2년에 1일씩 증가
-            daysGranted = Math.min(25, 15 + extra);
+        if (employeeDTO == null || employeeDTO.getHireDate() == null) {
+            log.warn("직원 정보 또는 입사일이 없습니다. employeeId={}", employeeId);
+            return;
         }
 
-        System.out.println("계산된 연차일수(daysGranted): " + daysGranted);
+        log.info("[연차계산] 입사일 기준 자동 연차 생성 시작 - employeeId={}, hireDate={}",
+                employeeId, employeeDTO.getHireDate());
 
-        // 3. DTO 세팅
+        // DTO 준비 (세부 계산은 내부 메서드가 수행)
         AnnualLeaveGrantDTO dto = new AnnualLeaveGrantDTO();
         dto.setEmployeeId(employeeId);
-        dto.setDaysGranted(daysGranted);
-        dto.setGrantDate(Date.from(Instant.now()));
-        dto.setExpireDate(Date.from(Instant.now().plus(365, ChronoUnit.DAYS)));
         dto.setReason("입사일 기준 자동 부여");
 
-        // 4. 등록 실행
-        registerAnnualLeave(dto);
+        // 기존 연차 계산 및 등록 메서드 재활용
+        boolean success = registerAnnualLeave(dto);
 
-        // 5. 잔여 휴가 갱신
-        employeeVacationDAO.updateRemaining(employeeId);
+        if (success) {
+            log.info("[연차계산] 입사일 기준 자동 부여 완료 - employeeId={}", employeeId);
+        } else {
+            log.warn("[연차계산] 연차 자동 부여 실패 - employeeId={}", employeeId);
+        }
     }
 
     // 입사일 기준 연차 자동 계산 및 등록
@@ -89,7 +72,7 @@ public class VacationService {
                 .toLocalDate();
         LocalDate today = LocalDate.now();
 
-        // 2. 근속년수 계산
+        // 2. 근속연수 계산
         long years = ChronoUnit.YEARS.between(hireDate, today);
         long months = ChronoUnit.MONTHS.between(hireDate, today);
 

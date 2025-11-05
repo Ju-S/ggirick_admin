@@ -2,9 +2,13 @@ package com.kedu.ggirick_admin_backend.infrastructure.api;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +32,10 @@ public class HolidayAPIClient {
         try {
             // 1. 호출 URL 구성 (query string에 연도와 서비스키 삽입)
             String url = String.format(
-                    "https://apis.data.go.kr/B090041/SpcdeInfoService/getRestDeInfo" +
-                            "?solYear=%d&numOfRows=100&ServiceKey=%s&_type=json",
-                    year, dataApiKey
+                    "https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo" +
+                            "?serviceKey=%s&solYear=%d&solMonth=%s",
+                    dataApiKey,
+                    year
             );
 
             // 2. GET 요청 전송 후 JSON을 Map 형태로 수신 (실패 시 예외 발생)
@@ -84,4 +89,37 @@ public class HolidayAPIClient {
             return List.of();
         }
     }
+
+    // 수정: 월별 호출용
+    public List<Map<String, Object>> fetchHolidays(int year, String month) {
+        try {
+            String url = String.format(
+                    "https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo" +
+                            "?serviceKey=%s&solYear=%d&solMonth=%s",
+                    dataApiKey,
+                    year,
+                    month
+            );
+
+            ResponseEntity<Map> resp = restTemplate.getForEntity(url, Map.class);
+            Map<String, Object> body = (Map<String, Object>) ((Map<String, Object>) resp.getBody().get("response")).get("body");
+            Map<String, Object> items = (Map<String, Object>) body.get("items");
+
+            if (items == null || items.isEmpty()) return Collections.emptyList();
+
+            Object itemObj = items.get("item");
+            if (itemObj instanceof List<?>) {
+                return (List<Map<String, Object>>) itemObj;
+            } else if (itemObj instanceof Map<?, ?>) {
+                return List.of((Map<String, Object>) itemObj);
+            } else {
+                return Collections.emptyList();
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 공휴일 API 호출 실패. year={}, month={}, msg={}", year, month, e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
 }

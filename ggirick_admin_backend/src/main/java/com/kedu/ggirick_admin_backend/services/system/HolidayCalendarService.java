@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -115,20 +116,37 @@ public class HolidayCalendarService {
         return insertedCount;
     }
 
-    // 올해 공휴일 수동 등록
+    // 올해 공휴일 수동 등록 (12개월 반복 호출)
     @Transactional
     public boolean registerCurrentYearHolidays() {
         int year = LocalDate.now().getYear();
         log.info("[수동등록] {}년도 공휴일 생성 시작", year);
 
         try {
-            List<Map<String, Object>> holidays = holidayAPIClient.fetchHolidays(year);
-            if (holidays == null || holidays.isEmpty()) {
+            List<Map<String, Object>> allHolidays = new ArrayList<>();
+
+            // 1~12월 반복 호출
+            for (int month = 1; month <= 12; month++) {
+                String formattedMonth = String.format("%02d", month);
+                List<Map<String, Object>> monthly = holidayAPIClient.fetchHolidays(year, formattedMonth);
+
+                if (monthly != null && !monthly.isEmpty()) {
+                    allHolidays.addAll(monthly);
+                    log.info("{}년 {}월 공휴일 {}건 수신", year, formattedMonth, monthly.size());
+                } else {
+                    log.debug("{}년 {}월 공휴일 없음", year, formattedMonth);
+                }
+
+                // API 서버 부하 방지를 위한 딜레이
+                try { Thread.sleep(300); } catch (InterruptedException ignored) {}
+            }
+
+            if (allHolidays.isEmpty()) {
                 log.warn("{}년도 공휴일 API 응답 비어있음", year);
                 return false;
             }
 
-            int inserted = saveHolidayData(holidays, year);
+            int inserted = saveHolidayData(allHolidays, year);
             return inserted > 0;
 
         } catch (Exception e) {
@@ -144,13 +162,30 @@ public class HolidayCalendarService {
         log.info("[수동등록] {}년도 공휴일 생성 시작", nextYear);
 
         try {
-            List<Map<String, Object>> holidays = holidayAPIClient.fetchHolidays(nextYear);
-            if (holidays == null || holidays.isEmpty()) {
+            List<Map<String, Object>> allHolidays = new ArrayList<>();
+
+            // 1~12월 반복 호출
+            for (int month = 1; month <= 12; month++) {
+                String formattedMonth = String.format("%02d", month);
+                List<Map<String, Object>> monthly = holidayAPIClient.fetchHolidays(nextYear, formattedMonth);
+
+                if (monthly != null && !monthly.isEmpty()) {
+                    allHolidays.addAll(monthly);
+                    log.info("{}년 {}월 공휴일 {}건 수신", nextYear, formattedMonth, monthly.size());
+                } else {
+                    log.debug("{}년 {}월 공휴일 없음", nextYear, formattedMonth);
+                }
+
+                // API 부하 방지를 위해 약간의 대기 (0.3초)
+                try { Thread.sleep(300); } catch (InterruptedException ignored) {}
+            }
+
+            if (allHolidays.isEmpty()) {
                 log.warn("{}년도 공휴일 API 응답 비어있음", nextYear);
                 return false;
             }
 
-            int inserted = saveHolidayData(holidays, nextYear);
+            int inserted = saveHolidayData(allHolidays, nextYear);
             return inserted > 0;
 
         } catch (Exception e) {
