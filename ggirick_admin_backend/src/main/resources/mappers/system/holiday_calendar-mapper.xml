@@ -54,4 +54,11 @@
         WHERE ID = #{id}
     </delete>
 
+    <!-- 특정 날짜가 공휴일인지 확인 -->
+    <select id="isHoliday" parameterType="java.sql.Date" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM HOLIDAY_CALENDAR
+        WHERE CAL_DATE = #{calDate}
+        AND IS_WORKDAY = 'N'
+    </select>
 </mapper>

@@ -146,12 +146,11 @@ export default function HRDashboard() {
     return (
         <main className="min-h-screen p-6 pt-20 md:ml-64 bg-base-200 text-base-content">
             {/* 요약 카드 */}
-            <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {[
                     { title: "전체 직원", value: `${employeeList.length}명`, sub: "활성 직원 수" },
                     { title: "부서 수", value: `${departments.length}개`, sub: "운영 중인 부서" },
-                    { title: "대기 중인 휴가", value: "1건", sub: "승인 대기" },
-                    { title: "평균 급여", value: "850만원", sub: "월 평균" },
+                    { title: "조직 수", value: `${organizations.length}개`, sub: "운영 중인 조직" }
                 ].map((card, i) => (
                     <div key={i} className="card bg-base-100 shadow-md hover:shadow-lg transition-all duration-300">
                         <div className="card-body p-4">
@@ -253,16 +252,22 @@ export default function HRDashboard() {
                         <h3 className="text-lg font-bold mb-4">입력 내용 확인</h3>
                         <p className="text-sm text-gray-500 mb-3">다음 정보로 직원을 등록합니다.</p>
                         {(() => {
-                            const deptObj = departments?.find(d => d.value === pendingData?.departmentCode);
-                            const jobObj = jobs?.find(j => j.value === pendingData?.jobCode);
-                            const orgObj = organizations?.find(o => o.value === pendingData?.organizationCode);
+                            const deptObj = departments?.find(d => d.code === pendingData?.departmentCode);
+                            const jobObj = jobs?.find(j => j.code === pendingData?.jobCode);
+                            const orgObj = organizations?.find(o => o.code === pendingData?.organizationCode);
 
                             return (
                                 <ul className="space-y-1 text-sm">
                                     <li><strong>이름:</strong> {pendingData?.name}</li>
-                                    <li><strong>부서:</strong> {deptObj?.label}</li>
-                                    <li><strong>직급:</strong> {jobObj?.label}</li>
-                                    <li><strong>조직:</strong> {orgObj?.label}</li>
+                                    <li>
+                                        <strong>조직:</strong> {orgObj ? `${orgObj.name} (${orgObj.code})` : "-"}
+                                    </li>
+                                    <li>
+                                        <strong>부서:</strong> {deptObj ? `${deptObj.name} (${deptObj.code})` : "-"}
+                                    </li>
+                                    <li>
+                                        <strong>직급:</strong> {jobObj ? `${jobObj.name} (${jobObj.code})` : "-"}
+                                    </li>
                                     <li><strong>입사일:</strong> {pendingData?.hireDate}</li>
                                     <li><strong>연봉:</strong> {pendingData?.salary}</li>
                                 </ul>

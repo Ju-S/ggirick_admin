@@ -53,8 +53,6 @@
         WHERE e.id = #{id}
     </select>
 
-
-
     <!-- 직원 목록 가져오기 -->
     <select id="getAllEmployeeList" resultType="com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO">
         SELECT
