@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://10.5.5.8:8082";
+const BASE_URL = "https://ggirick-admin-368108639987.asia-northeast3.run.app";
 //const BASE_URL = "http://192.168.219.110:8082";
 
 

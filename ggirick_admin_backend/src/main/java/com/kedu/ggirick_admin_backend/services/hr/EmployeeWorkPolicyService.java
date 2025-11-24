@@ -14,4 +14,9 @@ public class EmployeeWorkPolicyService {
     public EmployeeWorkPolicyDTO getEmployeeWorkPolicyDetails(String employeeId) {
         return employeeWorkPolicyDAO.getEmployeeWorkPolicyDetails(employeeId);
     }
+
+    // 직원 등록시 근무정책 입력
+    public void insertEmployeeWorkPolicy(String employeeId) {
+        employeeWorkPolicyDAO.insertEmployeeWorkPolicy(employeeId);
+    }
 }

@@ -34,7 +34,9 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(List.of(
                 "http://localhost:5728",
                 "http://10.5.5.8:5728",
-                "http://192.168.219.110:5728"
+                "http://192.168.219.110:5728",
+                "https://ggirick-admin-frontend.web.app",
+                "https://admin.ggirick.site"
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
