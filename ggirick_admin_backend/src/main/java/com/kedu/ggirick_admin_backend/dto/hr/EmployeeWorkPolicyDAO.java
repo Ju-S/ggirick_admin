@@ -27,4 +27,8 @@ public class EmployeeWorkPolicyDAO {
     public EmployeeWorkPolicyDTO getEmployeeWorkPolicyDetails(String employeeId) {
         return mybatis.selectOne("EmployeeWorkPolicy.getEmployeeWorkPolicyDetails", employeeId);
     }
+
+    public void insertEmployeeWorkPolicy(String employeeId) {
+        mybatis.insert("EmployeeWorkPolicy.insertEmployeeWorkPolicy", employeeId);
+    }
 }

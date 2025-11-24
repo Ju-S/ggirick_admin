@@ -9,7 +9,7 @@ export default function SideNav() {
             aria-label="Sidenav"
             id="drawer-navigation"
         >
-            <div className="h-full overflow-y-auto border-base-300 bg-base-100 px-3 py-5 dark:bg-gray-800">
+            <div className="h-full overflow-y-auto border-base-300 bg-base-100 px-3 py-5">
                 <form action="#" method="GET" className="mb-2 md:hidden">
                     <label htmlFor="sidebar-search" className="sr-only">
                         Search
@@ -33,42 +33,21 @@ export default function SideNav() {
                             type="text"
                             name="search"
                             id="sidebar-search"
-                            className="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border bg-base-100 p-2 pl-10 text-sm "
+                            className="focus:ring-primary-500 focus:border-primary-500 block w-full rounded-lg border bg-base-100 p-2 pl-10 text-sm "
                             placeholder="검색어 입력.."
                         />
                     </div>
                 </form>
-                <ul className="space-y-2">
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75 "
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                stroke="currentColor"
-                                className="lucide lucide-house-icon lucide-house h-6 w-6 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
-                            >
-                                <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
-                                <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            </svg>
-                            <span className="ml-3">홈</span>
-                        </button>
-                    </li>
+                <ul className="mt-5 space-y-2">
                     <li>
                         <button
                             type="button"
                             onClick={() => navigate("/hrdashboard")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
+                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium transition duration-75"
                         >
                             <svg
                                 aria-hidden="true"
-                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
+                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary"
                                 fill="currentColor"
                                 viewBox="0 -2 15 20"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -82,16 +61,16 @@ export default function SideNav() {
                         </button>
                     </li>
                 </ul>
-                <ul className="mt-5 space-y-2 border-t border-gray-200 pt-5 dark:border-gray-700">
+                <ul className="mt-5 space-y-2 border-t border-gray-200 pt-5">
                     <li>
                         <button
                             type="button"
                             onClick={() => navigate("/systemdashboard")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
+                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium transition duration-75"
                         >
                             <svg
                                 aria-hidden="true"
-                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
+                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -107,16 +86,16 @@ export default function SideNav() {
                         </button>
                     </li>
                 </ul>
-                <ul className="mt-5 space-y-2 border-t border-gray-200 pt-5 dark:border-gray-700">
+                <ul className="mt-5 space-y-2 border-t border-gray-200 pt-5">
                     <li>
                         <button
                             type="button"
                             onClick={() => navigate("/organization")}
-                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium  transition duration-75"
+                            className="group flex w-full items-center rounded-lg p-2 text-base-content font-medium transition duration-75"
                         >
                             <svg
                                 aria-hidden="true"
-                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-white"
+                                className="h-6 w-6 flex-shrink-0 text-primary transition duration-75 group-hover:text-secondary"
                                 fill="currentColor"
                                 viewBox="0 -2 15 20"
                                 xmlns="http://www.w3.org/2000/svg"

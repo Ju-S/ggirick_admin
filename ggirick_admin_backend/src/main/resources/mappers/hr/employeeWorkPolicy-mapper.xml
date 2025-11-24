@@ -65,4 +65,13 @@
         JOIN work_policy wp ON ewp.policy_id = wp.policy_id
         WHERE ewp.employee_id = #{employeeId}
     </select>
+
+    <!-- 직원 등록시 기본 근무정책 입력 -->
+    <insert id="insertEmployeeWorkPolicy">
+        INSERT INTO employee_work_policy (
+        employee_id
+        ) VALUES (
+        #{employeeId}
+        )
+    </insert>
 </mapper>

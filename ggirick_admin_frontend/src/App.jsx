@@ -145,7 +145,7 @@ export default function App() {
                             <Nav/>
                             <SideNav/>
                             <Routes>
-                                <Route path="/" element={<MainPage/>}/>
+                                <Route path="/" element={<HRDashboard/>}/>
                                 <Route path="/hrDashboard" element={<HRDashboard/>}/>
                                 <Route path="/systemDashboard" element={<SystemDashboard/>}/>
                                 <Route path="/organization" element={<OrganizationPage/>}/>

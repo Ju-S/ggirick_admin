@@ -3,6 +3,7 @@ package com.kedu.ggirick_admin_backend.services.hr;
 import com.kedu.ggirick_admin_backend.dao.hr.*;
 import com.kedu.ggirick_admin_backend.dto.hr.EmployeeDTO;
 import com.kedu.ggirick_admin_backend.dto.hr.EmployeeRegisterResultDTO;
+import com.kedu.ggirick_admin_backend.services.system.WorkPolicyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class EmployeeService {
     private final EmploymentStatusDAO employmentStatusDAO;
     private final VacationService vacationService;
     private final WorkPlanService workPlanService;
+    private final EmployeeWorkPolicyService employeeWorkPolicyService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -59,6 +61,9 @@ public class EmployeeService {
         employeeDAO.insertEmployeeOrganization(dto);
         employeeDAO.insertEmployeeAuthority(dto);
         employeeDAO.insertPasswordReset(dto.getId());
+        employeeWorkPolicyService.insertEmployeeWorkPolicy(dto.getId());
+
+        // 신규 직원 계획 생성
         workPlanService.generateInitialPlans(dto.getId());
 
         // 신규 직원 연차 자동 생성
